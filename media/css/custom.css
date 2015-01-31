@@ -1,0 +1,43 @@
+/* homepage */
+div.welcome-blurb.well {
+    margin-top: 21px;
+}
+
+div.welcome-blurb.well p {
+    margin: 0;
+}
+
+/* blog posts */
+header.page-header {
+    margin:21px 0 0px;
+    padding-bottom:0px;
+}
+
+article .panel-body {
+    padding: 0 0 6px;
+}
+
+a:hover {
+    background-color: #E4FFFF;
+}
+
+
+/* email address obfuscation */
+span.hideme {
+    display: none;
+}
+
+/* publication formatting on "about" page */
+.bib-entry .author {
+    display: block;
+}
+
+.bib-entry .papertitle {
+    font-weight: bold;
+    display: block;
+}
+
+.bib-entry .venue {
+    font-style: italic;
+    display: block;
+}

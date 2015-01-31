@@ -1,91 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-        <title>Ben Davis &middot; About Me</title>
-        <link rel="shortcut icon" href="http://www.thebendavis.net/favicon.ico" />
-<link href="http://www.thebendavis.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Ben Davis Atom Feed" />
+<html lang="en"
+>
+<head>
+    <title>TheBenDavis.net</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/screen.css" type="text/css" />
-        <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/pygments.css" type="text/css" />
-    </head>
-    <body>
-<div id="header">
-            <ul id="nav">
-                <li class="selected"><a href="http://www.thebendavis.net">Home</a></li>
-<li><a href="http://www.thebendavis.net/">About Me</a></li>
-<li><a href="http://www.thebendavis.net/archives.html">Archives</a></li>
+
+    <link href="http://www.thebendavis.net/media/favicon.ico" rel="icon">
+
+<link rel="canonical" href="http://www.thebendavis.net">
+        <meta name="author" content="Ben Davis" />
+
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="TheBenDavis.net" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="TheBenDavis.net"/>
+        <meta property="og:url" content="http://www.thebendavis.net"/>
+        <meta property="og:description" content="TheBenDavis.net"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/bootstrap.flatly.min.css" type="text/css"/>
+    <link href="http://www.thebendavis.net/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://www.thebendavis.net/theme/css/pygments/monokai.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/style.css" type="text/css"/>
+        <link href="http://www.thebendavis.net/media/css/custom.css" rel="stylesheet">
+
+        <link href="http://www.thebendavis.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="TheBenDavis.net ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://www.thebendavis.net/" class="navbar-brand">
+TheBenDavis.net            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/blog/">Blog</a></li>
+                         <li><a href="http://www.thebendavis.net/about/">
+                             About Me
+                          </a></li>
             </ul>
-            <div class="header_box">
-                <h1><a href="http://www.thebendavis.net">Ben Davis</a></h1>
-            </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://www.thebendavis.net/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
         </div>
-        <div id="wrapper">
-            <div id="content">
-                <div class="page">
-                    <h1>About Me</h1>
-                    <p>I recently completed my Ph.D. in Computer Science
-at the <a href="http://ucdavis.edu/">University of California, Davis</a>
-where I worked with Professor <a href="http://www.cs.ucdavis.edu/~hchen/">Hao Chen</a>
-in the <a href="http://seclab.cs.ucdavis.edu/">Computer Security Lab</a>.
-My research interests include computer security, privacy, and mobile systems.
-I am passionate about building software that allows us to better understand and control the systems on which we depend.</p>
-<div id="scoped-content">
-  <style type="text/css" scoped>
-  .bib .papertitle { font-weight: bold; display: block }
-  .bib .venue      { font-style: italic; display: block }
-  .bib .author     { display: block }
-  </style>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
 
-<h2>Dissertation</h2>
 
-  <p class="bib">
-  <span class="papertitle"><a href="/pubs/davis-dissertation.pdf">Protecting Systems from Within:<br />Application-Level Observation and Control Mechanisms</a></span>
-  <span class="author">Benjamin Davis, Dept. of Computer Science, University of California, Davis.</span>
-  <span class="venue">Dissertation Committee: Hao Chen, Matthew Bishop, Karl Levitt</span>
-  </p>
+<div class="welcome-blurb well">
+  
+<p>
+My name is Ben Davis. I'm a computer security and mobile systems researcher.
+To read more about me, my work, and my academic publications
+<strong><a href="/about/">click here</a></strong>.
+</p>
 
-<h2>Peer-Reviewed Academic Publications</h2>
 
-  <p class="bib">
-  <span class="papertitle"><a href="/pubs/davis-mobisys13-retroskeleton.pdf">RetroSkeleton: Retrofitting Android Apps</a></span>
-  <span class="author">Benjamin Davis and Hao Chen.</span>
-  <span class="venue">11th International Conference on Mobile Systems, Applications and Services (MobiSys).
-  Taipei, Taiwan, June 25-28, 2013. (15.7%)</span>
-  </p>
-
-  <p class="bib">
-  <span class="papertitle"><a href="/pubs/davis-most12-iarm.pdf">I-ARM-Droid: A Rewriting Framework for In-App Reference Monitors for Android Applications</a></span>
-  <span class="author">Benjamin Davis, Ben Sanders, Armen Khodaverdian, and Hao Chen.</span>
-  <span class="venue">IEEE Mobile Security Technologies (MoST).
-  San Francisco, CA, May 24, 2012. (39%)</span>
-  </p>
-
-  <p class="bib">
-  <span class="papertitle"><a href="/pubs/davis-asiaccs12-alibis.pdf">Privacy-Preserving Alibi Systems</a></span>
-  <span class="author">Benjamin Davis, Hao Chen, and Matthew Franklin.</span>
-  <span class="venue">7th ACM Symposium on Information, Computer and Communications Security (ASIACCS).
-  Seoul, South Korea, May 1-3, 2012. (22%)</span>
-  </p>
-
-  <p class="bib">
-  <span class="papertitle"><a href="/pubs/davis-webapps10-dbtaint.pdf">DBTaint: Cross-Application Information Flow Tracking via Databases</a></span>
-  <span class="author">Benjamin Davis and Hao Chen.</span>
-  <span class="venue">USENIX Conference on Web Applications (WebApps)
-  Boston, MA, June 23-24, 2010.</span>
-  </p>
 </div>
-                </div>
 
-                <div class="clear"></div>
-                <div id="footer">
-                    <p>
-                    Mockingbird theme by <a href="http://nevanscott.com/">Nevan Scott</a>
-                    &middot;
-                    <a class="atom" href="http://www.thebendavis.net/feeds/all.atom.xml">Feed</a>
-                </div>
-            </div>
-            <div class="clear"></div>
+<h1><a href="/blog/">Latest blog posts</a></h1>
+<article >
+  <h2>
+<a href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/"
+   title="Permalink to 'RetroSkeleton: Automatic Android App Bytecode Rewriting'"
+   rel="bookmark"
+   class="permalink">&diam;</a>
+<a href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/">RetroSkeleton: Automatic Android App Bytecode Rewriting</a>
+  </h2>
+  <div class="summary"><p>Do you know what your apps are doing? RetroSkeleton is a flexible Android app bytecode rewriting framework that empowers users to observe and control the functionality of the third-party apps.</p>
+    <a class="btn btn-default btn-xs" href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/">more &hellip;</a>
+  </div>
+</article>            <hr/>
+
+<a href="/blog/" class="btn btn-primary btn-lg" role="button">More blog posts&hellip;</a>
+
+
         </div>
-    </body>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Ben Davis
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://www.thebendavis.net/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://www.thebendavis.net/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://www.thebendavis.net/theme/js/respond.min.js"></script>
+
+
+</body>
 </html>

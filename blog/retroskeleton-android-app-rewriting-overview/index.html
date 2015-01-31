@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en"
+>
+<head>
+    <title>RetroSkeleton: Automatic Android App Bytecode Rewriting - TheBenDavis.net</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="http://www.thebendavis.net/media/favicon.ico" rel="icon">
+
+<link rel="canonical" href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/">
+
+        <meta name="author" content="Ben Davis" />
+        <meta name="keywords" content="android,dalvik,mobile" />
+        <meta name="description" content="Do you know what your apps are doing? RetroSkeleton is a flexible Android app bytecode rewriting framework that empowers users to observe and control the functionality of the third-party apps." />
+
+        <meta property="og:site_name" content="TheBenDavis.net" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="RetroSkeleton: Automatic Android App Bytecode Rewriting"/>
+        <meta property="og:url" content="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/"/>
+        <meta property="og:description" content="Do you know what your apps are doing? RetroSkeleton is a flexible Android app bytecode rewriting framework that empowers users to observe and control the functionality of the third-party apps."/>
+        <meta property="article:published_time" content="2015-01-30" />
+            <meta property="article:section" content="research" />
+            <meta property="article:tag" content="android" />
+            <meta property="article:tag" content="dalvik" />
+            <meta property="article:tag" content="mobile" />
+            <meta property="article:author" content="Ben Davis" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/bootstrap.flatly.min.css" type="text/css"/>
+    <link href="http://www.thebendavis.net/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://www.thebendavis.net/theme/css/pygments/monokai.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/style.css" type="text/css"/>
+        <link href="http://www.thebendavis.net/media/css/custom.css" rel="stylesheet">
+
+        <link href="http://www.thebendavis.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="TheBenDavis.net ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://www.thebendavis.net/" class="navbar-brand">
+TheBenDavis.net            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/blog/">Blog</a></li>
+                         <li><a href="http://www.thebendavis.net/about/">
+                             About Me
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://www.thebendavis.net/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+
+    <section id="content">
+        <article >
+            <header class="page-header">
+                <h1><a href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/"
+   title="Permalink to 'RetroSkeleton: Automatic Android App Bytecode Rewriting'"
+   rel="bookmark"
+   class="permalink">&diam;</a>
+<a href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/">RetroSkeleton: Automatic Android App Bytecode Rewriting</a>
+</h1>
+            </header>
+            <div class="entry-content">
+                <h3>Do you know what your apps are doing?</h3>
+<p>Android is the <a href="https://developer.android.com/about/index.html">most popular mobile platform in the world</a>, and a major reason for this success is the tremendous number of third-party apps available for these devices.
+But as amazing as it is to pack these little computers with sensors, fill them with our data, and keep them with us wherever we go, we should consider the risks we take when we run third-party software.
+How can we understand and control what third-party apps are doing on our devices?</p>
+<p>Most Android apps never undergo a rigorous manual review and the controls provided by the Android platform (primarily the permission system) are quite limited.
+Android's permission system requires app developers to declare all permissions (which you can think of as categories of functionality) their app may use.
+In order to install an app, the user must grant unlimited access to all permissions requested by the app.
+Many important permissions lack granularity.
+For example, the <code>INTERNET</code> permission enables unlimited connections to any host.
+Once the app is installed, the user cannot change, restrict, or revoke the app's ability to perform most sensitive operations.</p>
+<p>These are not hypothetical concerns.
+For example, when you install an app, Android does not allow you to
+prevent a flashlight app from <a href="http://www.ftc.gov/news-events/press-releases/2013/12/android-flashlight-app-developer-settles-ftc-charges-it-deceived" title="Android Flashlight App Developer Settles FTC Charges It Deceived Consumers: 'Brightest Flashlight' App Shared Users' Location, Device ID Without Consumers' Knowledge">uploading your personal data and location</a>,
+force <a href="http://android-ssl.org/files/p50-fahl.pdf" title="Why Eve and Mallory Love Android: An Analysis of Android SSL (In)Security">apps that make insecure HTTP requests</a> to use (encrypted) HTTPS connections instead,
+or apply <a href="http://android-developers.blogspot.ie/2013/08/some-securerandom-thoughts.html" title="Android Developers Blog: Some SecureRandom Thoughts">workarounds</a>
+to <a href="http://www.symantec.com/connect/blogs/android-cryptographic-issue-may-affect-hundreds-thousands-apps" title="Android Cryptographic Issue May Affect Hundreds of Thousands of Apps">platform weaknesses</a>
+that leave <a href="https://bitcoin.org/en/alert/2013-08-11-android" title="Android Security Vulnerability">unpatched bitcoin wallet apps vulnerable</a>.</p>
+<h3>RetroSkeleton gives users control over their apps</h3>
+<p>At the University of California, Davis, I led a project where my colleagues and I set out to develop a practical way to give users insight into and control over the third-party apps on their Android devices.
+We developed RetroSkeleton: an Android app analysis and bytecode rewriting framework for altering the behavior of existing applications without requiring source code or app-specific guidance.
+RetroSkeleton rewrites an app to produce a new app that obeys the desired policy.
+The foundation of our system is a sophisticated static analysis engine that determines the modifications needed in order to enforce the desired behavior in an app automatically.
+We named this app rewriting system RetroSkeleton after the ability to retrofit apps with new behavior by modifying their internals.</p>
+<p>We designed our system to be:</p>
+<ul>
+<li><strong>Complete:</strong> able to intercept all invocations of behavior of interest, including those invoked dynamically (e.g., via reflection)</li>
+<li><strong>Flexible:</strong> powerful enough to satisfy a wide range of security and functionality goals</li>
+<li><strong>App-Independent:</strong> no manual app-specific guidance needed to create or apply these transformation policies</li>
+<li><strong>Deployable:</strong> rewritten apps work on unrooted, unmodified, stock Android devices with no additional software required</li>
+</ul>
+<h3>How does it work?</h3>
+<p>RetroSkeleton allows policy writers to create a single, high-level, app-agnostic policy that RetroSkeleton can apply to any Android app without requiring any manual guidance.
+Our system takes as input an app-agnostic policy and applies it to an app automatically by identifying all the necessary transformations and generating all code needed for handlers/dispatch and interposition.
+RetroSkeleton parses and rewrites <a href="https://source.android.com/devices/tech/dalvik/dex-format.html" title="Dalvik Executable format">Android (dex) bytecode</a> directly (i.e., rather than converting to Java bytecode), replacing all invocations of methods of interest with calls to new handlers with custom behavior, as determined by a policy specification.
+Analysis and rewriting is done statically, but generates and inserts handlers that can make policy decisions within the rewritten app at run-time to deal with reflection and other dynamic behavior.
+Rewritten apps can run on stock Android devices (no rooting/custom ROMs required).</p>
+<p><img alt="RetroSkeleton System Diagram" src="http://www.thebendavis.net/blog_media/2015/retroskeleton/retroskeleton-system-diagram.svg" title="RetroSkeleton System Diagram" /></p>
+<p>Users may apply RetroSkeleton to apps they download on their own, either directly or via online service, and corporate environments could require that apps be rewritten before installation on company devices (either on-demand or by providing a private market of rewritten apps).
+Because RetroSkeleton policy specifications are app-agnostic, a small set of community-maintained and vetted policies could be used by a wide range of users.</p>
+<p>The majority of RetroSkeleton is implemented in <a href="http://clojure.org/">Clojure</a> and Java, with earlier work implemented in Python.
+Please see our publications for details on the design and implementation of our system, as well as the interface policy writers use for policy specification.</p>
+<h3>Using RetroSkeleton on real apps</h3>
+<p>We created a number of policies to showcase the power and flexibility of RetroSkeleton.
+Here are some of the behaviors our policies can automatically embed and enforce in Android apps:</p>
+<ul>
+<li>prevent connections to unauthorized hosts via fine-grained network access controls (including user-configurable white/blacklists)</li>
+<li>dynamically replace apps' insecure HTTP requests (a <a href="http://android-ssl.org/files/p50-fahl.pdf" title="Why Eve and Mallory Love Android: An Analysis of Android SSL (In)Security">common problem</a>) with encrypted HTTPS requests when available (a la the <a href="https://www.eff.org/https-everywhere" title="HTTPS-Everywhere browser extensions">HTTPS-Everywhere</a> extensions for browsers)</li>
+<li>perform (rudimentary) app localization by translating app UI text dynamically via online translation services (think "translate this page" for app UI content)</li>
+<li>automatically patch apps with <a href="http://android-developers.blogspot.ie/2013/08/some-securerandom-thoughts.html" title="Android Developers Blog: Some SecureRandom Thoughts">workarounds</a> for <a href="http://www.symantec.com/connect/blogs/android-cryptographic-issue-may-affect-hundreds-thousands-apps" title="Android Cryptographic Issue May Affect Hundreds of Thousands of Apps">known cryptographic vulnerabilities</a> in older versions of the Android platform</li>
+</ul>
+<p>We applied each of these policies to over 1,000 top free apps from <a href="https://play.google.com/store">Google Play</a> and built an automated test system to run and exercise each rewritten app in an Android emulator to confirm the functionality of the rewritten apps, including the enforcement of the desired behavior.
+Nearly all (more than 97.5%) successfully ran after rewriting (a few threw errors as a result of poorly handling changes in behavior, such as expecting a hardcoded string but receiving the translated version of that string).
+For more details, please see our publications below.</p>
+<p>For most policies, the impact of the rewriting process on the size and run-time performance of the app is minimal.
+On average, rewritten apps increased in size by only a few KiB, which was a less than 0.13% increase in overall app size in our data set.
+The specific run-time performance impact depends on the new behavior added, but the inherent overhead of our approach is low, adding only fractions of a microsecond when interposing on method calls of interest (even on aging hardware).
+Because much of the work is done statically, generally the impact is not much more than if the developer had originally written the app with the additional behavior.
+The static analysis and app rewriting process itself is efficient in terms of time and computation required, averaging about 5 seconds to rewrite an app using normal desktop PC hardware.</p>
+<h3>Read more in our publications</h3>
+<p>Parts of this work have been published in the following peer-reviewed publications with the coauthors named below:</p>
+<p><span class="bib-entry">
+    <span class="papertitle">RetroSkeleton: Retrofitting Android Apps (<a href="/pubs/davis-mobisys13-retroskeleton.pdf">paper</a>, <a href="/pubs/davis-mobisys13-retroskeleton-slides.pdf">slides</a>)</span>
+    <span class="author">Benjamin Davis and Hao Chen.</span>
+    <span class="venue">11th International Conference on Mobile Systems, Applications and Services (MobiSys). Taipei, Taiwan, June 25-28, 2013.</span>
+  </span></p>
+<p><span class="bib-entry">
+    <span class="papertitle">I-ARM-Droid: A Rewriting Framework for In-App Reference Monitors for Android Applications (<a href="/pubs/davis-most12-iarm.pdf">paper</a>, <a href="/pubs/davis-most12-iarm-slides.pdf">slides</a>)</span>
+    <span class="author">Benjamin Davis, Ben Sanders, Armen Khodaverdian, and Hao Chen.</span>
+    <span class="venue">IEEE Mobile Security Technologies (MoST). San Francisco, CA, May 24, 2012.</span>
+  </span></p>
+<p>For further elaboration, please see my Ph.D. dissertation:</p>
+<p><span class="bib-entry">
+    <span class="papertitle"><a href="/pubs/davis-dissertation.pdf">Protecting Systems from Within:<br />Application-Level Observation and Control Mechanisms</a></span>
+    <span class="author">Benjamin Davis, Department of Computer Science, University of California, Davis.</span>
+    <span class="venue">Dissertation Committee: Hao Chen, Matthew Bishop, Karl Levitt</span>
+  </span></p>
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+<a href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/"
+   title="Permalink to 'RetroSkeleton: Automatic Android App Bytecode Rewriting'"
+   rel="bookmark"
+   class="permalink">&diam;</a>
+    <!-- <span class="label label-default">Date</span> -->
+    <span class="published">
+        <!-- <i class="fa fa-calendar"></i> --><time datetime="2015-01-30T20:00:00-08:00"> Fri 30 January 2015</time>
+    </span>
+
+
+
+&Colon;
+<!-- <span class="label label-default">Tags</span> -->
+        <a href="http://www.thebendavis.net/tag/android.html">android</a>,         <a href="http://www.thebendavis.net/tag/dalvik.html">dalvik</a>,         <a href="http://www.thebendavis.net/tag/mobile.html">mobile</a>    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Ben Davis
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://www.thebendavis.net/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://www.thebendavis.net/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://www.thebendavis.net/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

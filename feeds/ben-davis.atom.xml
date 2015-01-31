@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>TheBenDavis.net</title><link href="http://www.thebendavis.net/" rel="alternate"></link><link href="http://www.thebendavis.net/feeds/ben-davis.atom.xml" rel="self"></link><id>http://www.thebendavis.net/</id><updated>2015-01-30T20:00:00-08:00</updated><entry><title>RetroSkeleton: Automatic Android App Bytecode Rewriting</title><link href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/" rel="alternate"></link><updated>2015-01-30T20:00:00-08:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-01-30:blog/retroskeleton-android-app-rewriting-overview/</id><summary type="html">&lt;h3&gt;Do you know what your apps are doing?&lt;/h3&gt;
+&lt;p&gt;Android is the &lt;a href="https://developer.android.com/about/index.html"&gt;most popular mobile platform in the world&lt;/a&gt;, and a major reason for this success is the tremendous number of third-party apps available for these devices.
+But as amazing as it is to pack these little computers with sensors, fill them with our data, and keep them with us wherever we go, we should consider the risks we take when we run third-party software.
+How can we understand and control what third-party apps are doing on our devices?&lt;/p&gt;
+&lt;p&gt;Most Android apps never undergo a rigorous manual review and the controls provided by the Android platform (primarily the permission system) are quite limited.
+Android's permission system requires app developers to declare all permissions (which you can think of as categories of functionality) their app may use.
+In order to install an app, the user must grant unlimited access to all permissions requested by the app.
+Many important permissions lack granularity.
+For example, the &lt;code&gt;INTERNET&lt;/code&gt; permission enables unlimited connections to any host.
+Once the app is installed, the user cannot change, restrict, or revoke the app's ability to perform most sensitive operations.&lt;/p&gt;
+&lt;p&gt;These are not hypothetical concerns.
+For example, when you install an app, Android does not allow you to
+prevent a flashlight app from &lt;a href="http://www.ftc.gov/news-events/press-releases/2013/12/android-flashlight-app-developer-settles-ftc-charges-it-deceived" title="Android Flashlight App Developer Settles FTC Charges It Deceived Consumers: 'Brightest Flashlight' App Shared Users' Location, Device ID Without Consumers' Knowledge"&gt;uploading your personal data and location&lt;/a&gt;,
+force &lt;a href="http://android-ssl.org/files/p50-fahl.pdf" title="Why Eve and Mallory Love Android: An Analysis of Android SSL (In)Security"&gt;apps that make insecure HTTP requests&lt;/a&gt; to use (encrypted) HTTPS connections instead,
+or apply &lt;a href="http://android-developers.blogspot.ie/2013/08/some-securerandom-thoughts.html" title="Android Developers Blog: Some SecureRandom Thoughts"&gt;workarounds&lt;/a&gt;
+to &lt;a href="http://www.symantec.com/connect/blogs/android-cryptographic-issue-may-affect-hundreds-thousands-apps" title="Android Cryptographic Issue May Affect Hundreds of Thousands of Apps"&gt;platform weaknesses&lt;/a&gt;
+that leave &lt;a href="https://bitcoin.org/en/alert/2013-08-11-android" title="Android Security Vulnerability"&gt;unpatched bitcoin wallet apps vulnerable&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;RetroSkeleton gives users control over their apps&lt;/h3&gt;
+&lt;p&gt;At the University of California, Davis, I led a project where my colleagues and I set out to develop a practical way to give users insight into and control over the third-party apps on their Android devices.
+We developed RetroSkeleton: an Android app analysis and bytecode rewriting framework for altering the behavior of existing applications without requiring source code or app-specific guidance.
+RetroSkeleton rewrites an app to produce a new app that obeys the desired policy.
+The foundation of our system is a sophisticated static analysis engine that determines the modifications needed in order to enforce the desired behavior in an app automatically.
+We named this app rewriting system RetroSkeleton after the ability to retrofit apps with new behavior by modifying their internals.&lt;/p&gt;
+&lt;p&gt;We designed our system to be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Complete:&lt;/strong&gt; able to intercept all invocations of behavior of interest, including those invoked dynamically (e.g., via reflection)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Flexible:&lt;/strong&gt; powerful enough to satisfy a wide range of security and functionality goals&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;App-Independent:&lt;/strong&gt; no manual app-specific guidance needed to create or apply these transformation policies&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Deployable:&lt;/strong&gt; rewritten apps work on unrooted, unmodified, stock Android devices with no additional software required&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;How does it work?&lt;/h3&gt;
+&lt;p&gt;RetroSkeleton allows policy writers to create a single, high-level, app-agnostic policy that RetroSkeleton can apply to any Android app without requiring any manual guidance.
+Our system takes as input an app-agnostic policy and applies it to an app automatically by identifying all the necessary transformations and generating all code needed for handlers/dispatch and interposition.
+RetroSkeleton parses and rewrites &lt;a href="https://source.android.com/devices/tech/dalvik/dex-format.html" title="Dalvik Executable format"&gt;Android (dex) bytecode&lt;/a&gt; directly (i.e., rather than converting to Java bytecode), replacing all invocations of methods of interest with calls to new handlers with custom behavior, as determined by a policy specification.
+Analysis and rewriting is done statically, but generates and inserts handlers that can make policy decisions within the rewritten app at run-time to deal with reflection and other dynamic behavior.
+Rewritten apps can run on stock Android devices (no rooting/custom ROMs required).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="RetroSkeleton System Diagram" src="http://www.thebendavis.net/blog_media/2015/retroskeleton/retroskeleton-system-diagram.svg" title="RetroSkeleton System Diagram" /&gt;&lt;/p&gt;
+&lt;p&gt;Users may apply RetroSkeleton to apps they download on their own, either directly or via online service, and corporate environments could require that apps be rewritten before installation on company devices (either on-demand or by providing a private market of rewritten apps).
+Because RetroSkeleton policy specifications are app-agnostic, a small set of community-maintained and vetted policies could be used by a wide range of users.&lt;/p&gt;
+&lt;p&gt;The majority of RetroSkeleton is implemented in &lt;a href="http://clojure.org/"&gt;Clojure&lt;/a&gt; and Java, with earlier work implemented in Python.
+Please see our publications for details on the design and implementation of our system, as well as the interface policy writers use for policy specification.&lt;/p&gt;
+&lt;h3&gt;Using RetroSkeleton on real apps&lt;/h3&gt;
+&lt;p&gt;We created a number of policies to showcase the power and flexibility of RetroSkeleton.
+Here are some of the behaviors our policies can automatically embed and enforce in Android apps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;prevent connections to unauthorized hosts via fine-grained network access controls (including user-configurable white/blacklists)&lt;/li&gt;
+&lt;li&gt;dynamically replace apps' insecure HTTP requests (a &lt;a href="http://android-ssl.org/files/p50-fahl.pdf" title="Why Eve and Mallory Love Android: An Analysis of Android SSL (In)Security"&gt;common problem&lt;/a&gt;) with encrypted HTTPS requests when available (a la the &lt;a href="https://www.eff.org/https-everywhere" title="HTTPS-Everywhere browser extensions"&gt;HTTPS-Everywhere&lt;/a&gt; extensions for browsers)&lt;/li&gt;
+&lt;li&gt;perform (rudimentary) app localization by translating app UI text dynamically via online translation services (think "translate this page" for app UI content)&lt;/li&gt;
+&lt;li&gt;automatically patch apps with &lt;a href="http://android-developers.blogspot.ie/2013/08/some-securerandom-thoughts.html" title="Android Developers Blog: Some SecureRandom Thoughts"&gt;workarounds&lt;/a&gt; for &lt;a href="http://www.symantec.com/connect/blogs/android-cryptographic-issue-may-affect-hundreds-thousands-apps" title="Android Cryptographic Issue May Affect Hundreds of Thousands of Apps"&gt;known cryptographic vulnerabilities&lt;/a&gt; in older versions of the Android platform&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We applied each of these policies to over 1,000 top free apps from &lt;a href="https://play.google.com/store"&gt;Google Play&lt;/a&gt; and built an automated test system to run and exercise each rewritten app in an Android emulator to confirm the functionality of the rewritten apps, including the enforcement of the desired behavior.
+Nearly all (more than 97.5%) successfully ran after rewriting (a few threw errors as a result of poorly handling changes in behavior, such as expecting a hardcoded string but receiving the translated version of that string).
+For more details, please see our publications below.&lt;/p&gt;
+&lt;p&gt;For most policies, the impact of the rewriting process on the size and run-time performance of the app is minimal.
+On average, rewritten apps increased in size by only a few KiB, which was a less than 0.13% increase in overall app size in our data set.
+The specific run-time performance impact depends on the new behavior added, but the inherent overhead of our approach is low, adding only fractions of a microsecond when interposing on method calls of interest (even on aging hardware).
+Because much of the work is done statically, generally the impact is not much more than if the developer had originally written the app with the additional behavior.
+The static analysis and app rewriting process itself is efficient in terms of time and computation required, averaging about 5 seconds to rewrite an app using normal desktop PC hardware.&lt;/p&gt;
+&lt;h3&gt;Read more in our publications&lt;/h3&gt;
+&lt;p&gt;Parts of this work have been published in the following peer-reviewed publications with the coauthors named below:&lt;/p&gt;
+&lt;p&gt;&lt;span class="bib-entry"&gt;
+    &lt;span class="papertitle"&gt;RetroSkeleton: Retrofitting Android Apps (&lt;a href="/pubs/davis-mobisys13-retroskeleton.pdf"&gt;paper&lt;/a&gt;, &lt;a href="/pubs/davis-mobisys13-retroskeleton-slides.pdf"&gt;slides&lt;/a&gt;)&lt;/span&gt;
+    &lt;span class="author"&gt;Benjamin Davis and Hao Chen.&lt;/span&gt;
+    &lt;span class="venue"&gt;11th International Conference on Mobile Systems, Applications and Services (MobiSys). Taipei, Taiwan, June 25-28, 2013.&lt;/span&gt;
+  &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="bib-entry"&gt;
+    &lt;span class="papertitle"&gt;I-ARM-Droid: A Rewriting Framework for In-App Reference Monitors for Android Applications (&lt;a href="/pubs/davis-most12-iarm.pdf"&gt;paper&lt;/a&gt;, &lt;a href="/pubs/davis-most12-iarm-slides.pdf"&gt;slides&lt;/a&gt;)&lt;/span&gt;
+    &lt;span class="author"&gt;Benjamin Davis, Ben Sanders, Armen Khodaverdian, and Hao Chen.&lt;/span&gt;
+    &lt;span class="venue"&gt;IEEE Mobile Security Technologies (MoST). San Francisco, CA, May 24, 2012.&lt;/span&gt;
+  &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;For further elaboration, please see my Ph.D. dissertation:&lt;/p&gt;
+&lt;p&gt;&lt;span class="bib-entry"&gt;
+    &lt;span class="papertitle"&gt;&lt;a href="/pubs/davis-dissertation.pdf"&gt;Protecting Systems from Within:&lt;br /&gt;Application-Level Observation and Control Mechanisms&lt;/a&gt;&lt;/span&gt;
+    &lt;span class="author"&gt;Benjamin Davis, Department of Computer Science, University of California, Davis.&lt;/span&gt;
+    &lt;span class="venue"&gt;Dissertation Committee: Hao Chen, Matthew Bishop, Karl Levitt&lt;/span&gt;
+  &lt;/span&gt;&lt;/p&gt;</summary><category term="android"></category><category term="dalvik"></category><category term="mobile"></category></entry></feed>
