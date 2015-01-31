@@ -2,7 +2,6 @@ title: RetroSkeleton: Automatic Android App Bytecode Rewriting
 date: 2015-01-30 20:00
 category: research
 tags: android, dalvik, mobile
-isproject: true
 summary: Do you know what your apps are doing? RetroSkeleton is a flexible Android app bytecode rewriting framework that empowers users to observe and control the functionality of the third-party apps.
 
 ### Do you know what your apps are doing?
