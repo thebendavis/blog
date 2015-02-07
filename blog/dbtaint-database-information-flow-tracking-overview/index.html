@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en"
+>
+<head>
+    <title>DBTaint: Cross-Application Information Flow Tracking via Databases - TheBenDavis.net</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="http://www.thebendavis.net/media/favicon.ico" rel="icon">
+
+<link rel="canonical" href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/">
+
+        <meta name="author" content="Ben Davis" />
+        <meta name="keywords" content="java,perl,sql,postgresql,web" />
+        <meta name="description" content="How can we prevent web services from using untrusted content in unsafe ways? DBTaint provides dynamic, end-to-end information flow tracking through entire web services and databases to prevent code injection and related attacks." />
+
+        <meta property="og:site_name" content="TheBenDavis.net" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="DBTaint: Cross-Application Information Flow Tracking via Databases"/>
+        <meta property="og:url" content="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/"/>
+        <meta property="og:description" content="How can we prevent web services from using untrusted content in unsafe ways? DBTaint provides dynamic, end-to-end information flow tracking through entire web services and databases to prevent code injection and related attacks."/>
+        <meta property="article:published_time" content="2015-02-06" />
+            <meta property="article:section" content="research" />
+            <meta property="article:tag" content="java" />
+            <meta property="article:tag" content="perl" />
+            <meta property="article:tag" content="sql" />
+            <meta property="article:tag" content="postgresql" />
+            <meta property="article:tag" content="web" />
+            <meta property="article:author" content="Ben Davis" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/bootstrap.flatly.min.css" type="text/css"/>
+    <link href="http://www.thebendavis.net/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://www.thebendavis.net/theme/css/pygments/monokai.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/style.css" type="text/css"/>
+        <link href="http://www.thebendavis.net/media/css/custom.css" rel="stylesheet">
+
+        <link href="http://www.thebendavis.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="TheBenDavis.net ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://www.thebendavis.net/" class="navbar-brand">
+TheBenDavis.net            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/blog/">Blog</a></li>
+                         <li><a href="http://www.thebendavis.net/about/">
+                             About Me
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://www.thebendavis.net/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+
+    <section id="content">
+        <article >
+            <header class="page-header">
+                <h1><a href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/"
+   title="Permalink to 'DBTaint: Cross-Application Information Flow Tracking via Databases'"
+   rel="bookmark"
+   class="permalink">&diam;</a>
+<a href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/">DBTaint: Cross-Application Information Flow Tracking via Databases</a>
+</h1>
+            </header>
+            <div class="entry-content">
+                <h3>The dangers of user content</h3>
+<p>One major challenge modern web services face is how to safely incorporate user content.
+Naive use of potentially malicious content can leave the service and its visitors vulnerable to attack.
+Many of these attacks work by <a href="https://en.wikipedia.org/wiki/Code_injection">code injection</a>, in which improperly handled content is used in an unsafe way.
+For example, in <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">cross-site scripting (XSS)</a>, malicious content is injected into web pages served to users of the web service.
+This can allow an attacker to bypass the same-origin policy, steal credentials of other users visiting the site, and much more.</p>
+<p>In order to prevent these types of attacks, the developers of a service must make sure that all untrusted (potentially malicious) content is sanitized before it is used in an unsafe way.
+Unfortunately, any mistake could leave a gap that an attacker could use to exploit the service.
+Trying to find and close all of these gaps, while avoiding the introduction of new ones, can seem like a game of <a href="https://en.wikipedia.org/wiki/Whac-A-Mole#Colloquial_usage" title="whenever a problem is 'whacked,' another one pops up somewhere else">Whac-A-Mole</a>, especially in systems originally developed without following industry best practices.</p>
+<h3>Tell me before I do something stupid!</h3>
+<p>Taking a step back, we see that the general problem is that when data is used in a dangerous operation the system has no way to know whether this data is safe to use or not.
+It's up to the developers to make sure only safe (sanitized) data makes it this far - and to never make a mistake!
+But there is another way to make sure only safe data is used in dangerous operations...</p>
+<p><a href="https://en.wikipedia.org/wiki/Information_flow_%28information_theory%29" title="Information flow (information theory)">Information flow</a> is a way to reason about how data flows through a system.
+<a href="http://en.wikipedia.org/wiki/Taint_checking">Taint checking</a> can provide a dynamic system that approximates the verification from full information flow analysis.
+In systems that provide taint checking, data from an untrusted source is marked as "tainted" in metadata associated with the data.
+While more sophisticated schemes exist (and are supported by DBTaint), to simplify the discussion we will assume there is a single bit of metadata for each data value, indicating either "tainted" or "untainted."
+Tainted data can only become untainted by passing through the appropriate sanitization routine.</p>
+<p>This metadata accompanies the data itself as it passes through the system, such as from one variable to another.
+When data is passed to a potentially dangerous operation (e.g., <code>eval</code>), this tracking system can inspect the metadata on the data to determine if the value is "tainted."
+If so, then the system knows that this is (or at least could be) unsanitized data from an untrusted source and should not be allowed to be used in this dangerous operation.</p>
+<p>There are many dynamic information flow tracking systems that provide taint checking.
+Perl and Ruby both include taint modes, and third-party systems exist for other languages, such as <a href="http://www.eecs.berkeley.edu/~daw/papers/taint-sws09.pdf" title="Efficient Character-level Taint Tracking for Java">Java (PDF link)</a> and <a href="http://php.net/manual/en/book.taint.php">PHP</a>.
+This seems perfect for preventing cross-site scripting, SQL-injection, and many other attacks, so why isn't it widely used in web services?</p>
+<h3>Limitations of information flow tracking implementations</h3>
+<p>Unfortunately, most information flow tracking systems only work for a single application at a time.
+For example, Perl's taint mode only maintains and propagates this taint metadata on data as it flows through the Perl program.
+The problem is that most web services include not only a web application, but also a database.
+All the metadata Perl's taint mode tracks is lost when sending data across the application boundaries into the database.
+Similarly, when data is retrieved from the database Perl's taint mode has no idea how it should be marked.
+The only two options Perl provides for this is to:</p>
+<ol>
+<li>treat everything from the database as tainted, or</li>
+<li>treat everything from the database as untainted</li>
+</ol>
+<p>Obviously, neither will provide satisfactory results for most web services.</p>
+<p>Other single-application information flow tracking systems have the same drawbacks.
+And while system-wide information flow tracking systems exist, these generally lack the necessary granularity and support of database semantics to provide the precision necessary to protect against common web attacks.</p>
+<p>What can we do?</p>
+<h3>DBTaint enables cross-application information flow tracking via databases</h3>
+<p>At UC Davis, I led a project with the goal of empowering administrators of web services to use existing single-application information flow tracking systems in multi-application web services.
+Since we enable taint checking from applications into databases, through database operations, and back into the application, we named this project <strong>DBTaint</strong>.
+DBTaint was designed and built to meet the following requirements:</p>
+<ul>
+<li>efficient end-to-end taint tracking through applications and databases</li>
+<li>full support of database operations and semantics</li>
+<li>deployment is transparent (requires no changes) to the web application</li>
+<li>requires only SQL-level changes on the database server (uses stock database engine)</li>
+</ul>
+<h3>Design and implementation</h3>
+<p>On initialization, DBTaint performs SQL-level changes to the database tables used by the app.
+Additionally, DBTaint creates composite-type versions of all of the database data types.
+These composite types include the data value as well as the associated metadata (i.e., taint value).
+Also, it initializes and overloads the necessary database functions in order to perform taint-value propagation through database operations.
+For example, it adds a <code>SUM</code> function that produces an untainted result if and only if all of the values passed to it are untainted, otherwise it returns a result with the highest taint value of all of the input values.
+Please see the publications listed below for details on the semantics of the database operations.</p>
+<p>This is a diagram showing a web service running in DBTaint.</p>
+<p><img alt="DBTaint System Diagram" src="http://www.thebendavis.net/blog_media/2015/dbtaint/dbtaint-system-diagram.png" title="&quot;DBTaint System Diagram&quot; =200x" /></p>
+<p>In the diagram above, the red rounded rectangle around the Web App indicates the single-application information flow tracking system (e.g., Perl's taint mode).
+Observe that when a web app communicates with the database via a standard database interface module, this database interface is still running within the same single-application information flow tracking system.
+The metadata associated with data intended for the database has not yet been lost.</p>
+<p>DBTaint provides end-to-end taint tracking transparently to the web application by augmenting the database interface to intercept and automatically rewrite database queries made by the web app.
+When inserting data, the DBTaint-augmented version of the interface parses the query at run-time, and rewrites it to include the metadata associated with each data value before sending the rewritten query to the database.
+This metadata is stored and propagated through the database using our composite types and functions.
+Similarly, when querying for data, our augmented interface will collapse the resulting composite data/metadata pairs it gets from the database into appropriately tainted data values, which it returns to the web application.</p>
+<p>A major benefit of this approach is that the web app makes the same queries (and receives the same results) as running without DBTaint, so these changes are completely transparent to the web app.
+The only difference from the web application's perspective is that the values it receives from the database are tainted appropriately (i.e., more precisely than the all-tainted or all-untainted options available without DBTaint).</p>
+<p>Once we have augmented a standard database interface, DBTaint supports any application that uses that standard interface.
+In our current implementation we augment the <a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity">Java Database Connectivity (JDBC)</a> interface used by Java programs, and the <a href="https://en.wikipedia.org/wiki/Perl_DBI">Database Interface (DBI) module</a> used by Perl programs.</p>
+<p>It is a best practice for application developers to use parameterized SQL queries, which makes it easy to determine the taint values of individual data values passed to the database as query parameters.
+But when a web app creates queries by string concatenation, DBTaint parses the query string and uses character-level taint data (when available) to determine the most precise taint values of each data element in the query.</p>
+<h3>Using DBTaint for real-world services</h3>
+<p>Our implementation of DBTaint works with services implemented in Perl and Java that use PostgreSQL databases.
+We use Perl's <a href="http://perldoc.perl.org/perlsec.html#Taint-mode" title="perlsec: Taint Mode">taint mode</a> (modified to act as a passive taint-tracking system) and <a href="http://www.eecs.berkeley.edu/~daw/papers/taint-sws09.pdf" title="Efficient Character-level Taint Tracking for Java">this character-level taint tracking engine for Java (PDF link)</a> to perform the appropriate information flow tracking when running two real-world web services in DBTaint:</p>
+<ul>
+<li><a href="https://www.bestpractical.com/rt/" title="RT: Request Tracker">RT (Request Tracker)</a>: a popular ticket-tracking system implemented in Perl</li>
+<li><a href="http://jforum.net/" title="jforum: a powerful and robust discussion board system implemented in Java">jforum</a>: a powerful discussion board system implemented in Java</li>
+</ul>
+<p>Note that these services were not written with DBTaint (or information flow tracking of any kind) in mind, and our approach did not require any code changes to either application.</p>
+<p>The performance impact of DBTaint on these systems was relatively low (less than 10-15% overhead) in our evaluation.
+In additional experiments, we show that we can trade portability for performance by implementing the composite-type metadata propagation database functionality in C rather than in SQL to further reduce the overhead of our approach.
+Please see our publications for a more detailed discussion of these topics.</p>
+<h3>Read more in our published work</h3>
+<p>Parts of this work have been published in the following peer-reviewed publication:</p>
+<p><span class="bib-entry">
+    <span class="papertitle">DBTaint: Cross-Application Information Flow Tracking via Databases (<a href="/pubs/davis-webapps10-dbtaint.pdf">paper</a>, <a href="/pubs/davis-webapps10-dbtaint-slides.pdf">slides</a>, <a href="/pubs/davis-webapps10-dbtaint-poster.pdf">poster</a>)</span>
+    <span class="author">Benjamin Davis and Hao Chen.</span>
+    <span class="venue">USENIX Conference on Web Applications (WebApps). Boston, MA, June 23-24, 2010.</span>
+  </span></p>
+<p>For further elaboration, please see my Ph.D. dissertation:</p>
+<p><span class="bib-entry">
+    <span class="papertitle"><a href="/pubs/davis-dissertation.pdf">Protecting Systems from Within:<br />Application-Level Observation and Control Mechanisms</a></span>
+    <span class="author">Benjamin Davis, Department of Computer Science, University of California, Davis.</span>
+    <span class="venue">Dissertation Committee: Hao Chen, Matthew Bishop, Karl Levitt</span>
+  </span></p>
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+<a href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/"
+   title="Permalink to 'DBTaint: Cross-Application Information Flow Tracking via Databases'"
+   rel="bookmark"
+   class="permalink">&diam;</a>
+    <!-- <span class="label label-default">Date</span> -->
+    <span class="published">
+        <!-- <i class="fa fa-calendar"></i> --><time datetime="2015-02-06T20:00:00-08:00"> Fri 06 February 2015</time>
+    </span>
+
+
+
+&Colon;
+<!-- <span class="label label-default">Tags</span> -->
+        <a href="http://www.thebendavis.net/tag/java.html">java</a>,         <a href="http://www.thebendavis.net/tag/perl.html">perl</a>,         <a href="http://www.thebendavis.net/tag/sql.html">sql</a>,         <a href="http://www.thebendavis.net/tag/postgresql.html">postgresql</a>,         <a href="http://www.thebendavis.net/tag/web.html">web</a>    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Ben Davis
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://www.thebendavis.net/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://www.thebendavis.net/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://www.thebendavis.net/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

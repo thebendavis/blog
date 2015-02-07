@@ -1,5 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>TheBenDavis.net</title><link href="http://www.thebendavis.net/" rel="alternate"></link><link href="http://www.thebendavis.net/feeds/all.atom.xml" rel="self"></link><id>http://www.thebendavis.net/</id><updated>2015-01-30T20:00:00-08:00</updated><entry><title>RetroSkeleton: Automatic Android App Bytecode Rewriting</title><link href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/" rel="alternate"></link><updated>2015-01-30T20:00:00-08:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-01-30:blog/retroskeleton-android-app-rewriting-overview/</id><summary type="html">&lt;h3&gt;Do you know what your apps are doing?&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>TheBenDavis.net</title><link href="http://www.thebendavis.net/" rel="alternate"></link><link href="http://www.thebendavis.net/feeds/all.atom.xml" rel="self"></link><id>http://www.thebendavis.net/</id><updated>2015-02-06T20:00:00-08:00</updated><entry><title>DBTaint: Cross-Application Information Flow Tracking via Databases</title><link href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/" rel="alternate"></link><updated>2015-02-06T20:00:00-08:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-02-06:blog/dbtaint-database-information-flow-tracking-overview/</id><summary type="html">&lt;h3&gt;The dangers of user content&lt;/h3&gt;
+&lt;p&gt;One major challenge modern web services face is how to safely incorporate user content.
+Naive use of potentially malicious content can leave the service and its visitors vulnerable to attack.
+Many of these attacks work by &lt;a href="https://en.wikipedia.org/wiki/Code_injection"&gt;code injection&lt;/a&gt;, in which improperly handled content is used in an unsafe way.
+For example, in &lt;a href="https://en.wikipedia.org/wiki/Cross-site_scripting"&gt;cross-site scripting (XSS)&lt;/a&gt;, malicious content is injected into web pages served to users of the web service.
+This can allow an attacker to bypass the same-origin policy, steal credentials of other users visiting the site, and much more.&lt;/p&gt;
+&lt;p&gt;In order to prevent these types of attacks, the developers of a service must make sure that all untrusted (potentially malicious) content is sanitized before it is used in an unsafe way.
+Unfortunately, any mistake could leave a gap that an attacker could use to exploit the service.
+Trying to find and close all of these gaps, while avoiding the introduction of new ones, can seem like a game of &lt;a href="https://en.wikipedia.org/wiki/Whac-A-Mole#Colloquial_usage" title="whenever a problem is 'whacked,' another one pops up somewhere else"&gt;Whac-A-Mole&lt;/a&gt;, especially in systems originally developed without following industry best practices.&lt;/p&gt;
+&lt;h3&gt;Tell me before I do something stupid!&lt;/h3&gt;
+&lt;p&gt;Taking a step back, we see that the general problem is that when data is used in a dangerous operation the system has no way to know whether this data is safe to use or not.
+It's up to the developers to make sure only safe (sanitized) data makes it this far - and to never make a mistake!
+But there is another way to make sure only safe data is used in dangerous operations...&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Information_flow_%28information_theory%29" title="Information flow (information theory)"&gt;Information flow&lt;/a&gt; is a way to reason about how data flows through a system.
+&lt;a href="http://en.wikipedia.org/wiki/Taint_checking"&gt;Taint checking&lt;/a&gt; can provide a dynamic system that approximates the verification from full information flow analysis.
+In systems that provide taint checking, data from an untrusted source is marked as "tainted" in metadata associated with the data.
+While more sophisticated schemes exist (and are supported by DBTaint), to simplify the discussion we will assume there is a single bit of metadata for each data value, indicating either "tainted" or "untainted."
+Tainted data can only become untainted by passing through the appropriate sanitization routine.&lt;/p&gt;
+&lt;p&gt;This metadata accompanies the data itself as it passes through the system, such as from one variable to another.
+When data is passed to a potentially dangerous operation (e.g., &lt;code&gt;eval&lt;/code&gt;), this tracking system can inspect the metadata on the data to determine if the value is "tainted."
+If so, then the system knows that this is (or at least could be) unsanitized data from an untrusted source and should not be allowed to be used in this dangerous operation.&lt;/p&gt;
+&lt;p&gt;There are many dynamic information flow tracking systems that provide taint checking.
+Perl and Ruby both include taint modes, and third-party systems exist for other languages, such as &lt;a href="http://www.eecs.berkeley.edu/~daw/papers/taint-sws09.pdf" title="Efficient Character-level Taint Tracking for Java"&gt;Java (PDF link)&lt;/a&gt; and &lt;a href="http://php.net/manual/en/book.taint.php"&gt;PHP&lt;/a&gt;.
+This seems perfect for preventing cross-site scripting, SQL-injection, and many other attacks, so why isn't it widely used in web services?&lt;/p&gt;
+&lt;h3&gt;Limitations of information flow tracking implementations&lt;/h3&gt;
+&lt;p&gt;Unfortunately, most information flow tracking systems only work for a single application at a time.
+For example, Perl's taint mode only maintains and propagates this taint metadata on data as it flows through the Perl program.
+The problem is that most web services include not only a web application, but also a database.
+All the metadata Perl's taint mode tracks is lost when sending data across the application boundaries into the database.
+Similarly, when data is retrieved from the database Perl's taint mode has no idea how it should be marked.
+The only two options Perl provides for this is to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;treat everything from the database as tainted, or&lt;/li&gt;
+&lt;li&gt;treat everything from the database as untainted&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Obviously, neither will provide satisfactory results for most web services.&lt;/p&gt;
+&lt;p&gt;Other single-application information flow tracking systems have the same drawbacks.
+And while system-wide information flow tracking systems exist, these generally lack the necessary granularity and support of database semantics to provide the precision necessary to protect against common web attacks.&lt;/p&gt;
+&lt;p&gt;What can we do?&lt;/p&gt;
+&lt;h3&gt;DBTaint enables cross-application information flow tracking via databases&lt;/h3&gt;
+&lt;p&gt;At UC Davis, I led a project with the goal of empowering administrators of web services to use existing single-application information flow tracking systems in multi-application web services.
+Since we enable taint checking from applications into databases, through database operations, and back into the application, we named this project &lt;strong&gt;DBTaint&lt;/strong&gt;.
+DBTaint was designed and built to meet the following requirements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;efficient end-to-end taint tracking through applications and databases&lt;/li&gt;
+&lt;li&gt;full support of database operations and semantics&lt;/li&gt;
+&lt;li&gt;deployment is transparent (requires no changes) to the web application&lt;/li&gt;
+&lt;li&gt;requires only SQL-level changes on the database server (uses stock database engine)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Design and implementation&lt;/h3&gt;
+&lt;p&gt;On initialization, DBTaint performs SQL-level changes to the database tables used by the app.
+Additionally, DBTaint creates composite-type versions of all of the database data types.
+These composite types include the data value as well as the associated metadata (i.e., taint value).
+Also, it initializes and overloads the necessary database functions in order to perform taint-value propagation through database operations.
+For example, it adds a &lt;code&gt;SUM&lt;/code&gt; function that produces an untainted result if and only if all of the values passed to it are untainted, otherwise it returns a result with the highest taint value of all of the input values.
+Please see the publications listed below for details on the semantics of the database operations.&lt;/p&gt;
+&lt;p&gt;This is a diagram showing a web service running in DBTaint.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="DBTaint System Diagram" src="http://www.thebendavis.net/blog_media/2015/dbtaint/dbtaint-system-diagram.png" title="&amp;quot;DBTaint System Diagram&amp;quot; =200x" /&gt;&lt;/p&gt;
+&lt;p&gt;In the diagram above, the red rounded rectangle around the Web App indicates the single-application information flow tracking system (e.g., Perl's taint mode).
+Observe that when a web app communicates with the database via a standard database interface module, this database interface is still running within the same single-application information flow tracking system.
+The metadata associated with data intended for the database has not yet been lost.&lt;/p&gt;
+&lt;p&gt;DBTaint provides end-to-end taint tracking transparently to the web application by augmenting the database interface to intercept and automatically rewrite database queries made by the web app.
+When inserting data, the DBTaint-augmented version of the interface parses the query at run-time, and rewrites it to include the metadata associated with each data value before sending the rewritten query to the database.
+This metadata is stored and propagated through the database using our composite types and functions.
+Similarly, when querying for data, our augmented interface will collapse the resulting composite data/metadata pairs it gets from the database into appropriately tainted data values, which it returns to the web application.&lt;/p&gt;
+&lt;p&gt;A major benefit of this approach is that the web app makes the same queries (and receives the same results) as running without DBTaint, so these changes are completely transparent to the web app.
+The only difference from the web application's perspective is that the values it receives from the database are tainted appropriately (i.e., more precisely than the all-tainted or all-untainted options available without DBTaint).&lt;/p&gt;
+&lt;p&gt;Once we have augmented a standard database interface, DBTaint supports any application that uses that standard interface.
+In our current implementation we augment the &lt;a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity"&gt;Java Database Connectivity (JDBC)&lt;/a&gt; interface used by Java programs, and the &lt;a href="https://en.wikipedia.org/wiki/Perl_DBI"&gt;Database Interface (DBI) module&lt;/a&gt; used by Perl programs.&lt;/p&gt;
+&lt;p&gt;It is a best practice for application developers to use parameterized SQL queries, which makes it easy to determine the taint values of individual data values passed to the database as query parameters.
+But when a web app creates queries by string concatenation, DBTaint parses the query string and uses character-level taint data (when available) to determine the most precise taint values of each data element in the query.&lt;/p&gt;
+&lt;h3&gt;Using DBTaint for real-world services&lt;/h3&gt;
+&lt;p&gt;Our implementation of DBTaint works with services implemented in Perl and Java that use PostgreSQL databases.
+We use Perl's &lt;a href="http://perldoc.perl.org/perlsec.html#Taint-mode" title="perlsec: Taint Mode"&gt;taint mode&lt;/a&gt; (modified to act as a passive taint-tracking system) and &lt;a href="http://www.eecs.berkeley.edu/~daw/papers/taint-sws09.pdf" title="Efficient Character-level Taint Tracking for Java"&gt;this character-level taint tracking engine for Java (PDF link)&lt;/a&gt; to perform the appropriate information flow tracking when running two real-world web services in DBTaint:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.bestpractical.com/rt/" title="RT: Request Tracker"&gt;RT (Request Tracker)&lt;/a&gt;: a popular ticket-tracking system implemented in Perl&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://jforum.net/" title="jforum: a powerful and robust discussion board system implemented in Java"&gt;jforum&lt;/a&gt;: a powerful discussion board system implemented in Java&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Note that these services were not written with DBTaint (or information flow tracking of any kind) in mind, and our approach did not require any code changes to either application.&lt;/p&gt;
+&lt;p&gt;The performance impact of DBTaint on these systems was relatively low (less than 10-15% overhead) in our evaluation.
+In additional experiments, we show that we can trade portability for performance by implementing the composite-type metadata propagation database functionality in C rather than in SQL to further reduce the overhead of our approach.
+Please see our publications for a more detailed discussion of these topics.&lt;/p&gt;
+&lt;h3&gt;Read more in our published work&lt;/h3&gt;
+&lt;p&gt;Parts of this work have been published in the following peer-reviewed publication:&lt;/p&gt;
+&lt;p&gt;&lt;span class="bib-entry"&gt;
+    &lt;span class="papertitle"&gt;DBTaint: Cross-Application Information Flow Tracking via Databases (&lt;a href="/pubs/davis-webapps10-dbtaint.pdf"&gt;paper&lt;/a&gt;, &lt;a href="/pubs/davis-webapps10-dbtaint-slides.pdf"&gt;slides&lt;/a&gt;, &lt;a href="/pubs/davis-webapps10-dbtaint-poster.pdf"&gt;poster&lt;/a&gt;)&lt;/span&gt;
+    &lt;span class="author"&gt;Benjamin Davis and Hao Chen.&lt;/span&gt;
+    &lt;span class="venue"&gt;USENIX Conference on Web Applications (WebApps). Boston, MA, June 23-24, 2010.&lt;/span&gt;
+  &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;For further elaboration, please see my Ph.D. dissertation:&lt;/p&gt;
+&lt;p&gt;&lt;span class="bib-entry"&gt;
+    &lt;span class="papertitle"&gt;&lt;a href="/pubs/davis-dissertation.pdf"&gt;Protecting Systems from Within:&lt;br /&gt;Application-Level Observation and Control Mechanisms&lt;/a&gt;&lt;/span&gt;
+    &lt;span class="author"&gt;Benjamin Davis, Department of Computer Science, University of California, Davis.&lt;/span&gt;
+    &lt;span class="venue"&gt;Dissertation Committee: Hao Chen, Matthew Bishop, Karl Levitt&lt;/span&gt;
+  &lt;/span&gt;&lt;/p&gt;</summary><category term="java"></category><category term="perl"></category><category term="sql"></category><category term="postgresql"></category><category term="web"></category></entry><entry><title>RetroSkeleton: Automatic Android App Bytecode Rewriting</title><link href="http://www.thebendavis.net/blog/retroskeleton-android-app-rewriting-overview/" rel="alternate"></link><updated>2015-01-30T20:00:00-08:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-01-30:blog/retroskeleton-android-app-rewriting-overview/</id><summary type="html">&lt;h3&gt;Do you know what your apps are doing?&lt;/h3&gt;
 &lt;p&gt;Android is the &lt;a href="https://developer.android.com/about/index.html"&gt;most popular mobile platform in the world&lt;/a&gt;, and a major reason for this success is the tremendous number of third-party apps available for these devices.
 But as amazing as it is to pack these little computers with sensors, fill them with our data, and keep them with us wherever we go, we should consider the risks we take when we run third-party software.
 How can we understand and control what third-party apps are doing on our devices?&lt;/p&gt;
