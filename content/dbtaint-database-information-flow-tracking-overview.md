@@ -124,7 +124,7 @@ Please see our publications for a more detailed discussion of these topics.
 
 
 
-### Read more in our published work
+### Read more in these publications
 
 Parts of this work have been published in the following peer-reviewed publication:
 

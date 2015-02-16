@@ -81,9 +81,9 @@ Because much of the work is done statically, generally the impact is not much mo
 The static analysis and app rewriting process itself is efficient in terms of time and computation required, averaging about 5 seconds to rewrite an app using normal desktop PC hardware.
 
 
-### Read more in our publications
+### Read more in these publications
 
-Parts of this work have been published in the following peer-reviewed publications with the coauthors named below:
+Parts of this work have been published in the following peer-reviewed publications:
 
   <span class="bib-entry">
     <span class="papertitle">RetroSkeleton: Retrofitting Android Apps (<a href="/pubs/davis-mobisys13-retroskeleton.pdf">paper</a>, <a href="/pubs/davis-mobisys13-retroskeleton-slides.pdf">slides</a>)</span>
