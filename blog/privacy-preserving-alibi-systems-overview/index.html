@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en"
+>
+<head>
+    <title>Privacy-Preserving Alibis for Mobile Device Users - TheBenDavis.net</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="http://www.thebendavis.net/media/favicon.ico" rel="icon">
+
+<link rel="canonical" href="http://www.thebendavis.net/blog/privacy-preserving-alibi-systems-overview/">
+
+        <meta name="author" content="Ben Davis" />
+        <meta name="keywords" content="crypto,privacy,mobile" />
+        <meta name="description" content="How can we use our mobile devices to show where we&#39;ve been without letting anyone track us?" />
+
+        <meta property="og:site_name" content="TheBenDavis.net" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Privacy-Preserving Alibis for Mobile Device Users"/>
+        <meta property="og:url" content="http://www.thebendavis.net/blog/privacy-preserving-alibi-systems-overview/"/>
+        <meta property="og:description" content="How can we use our mobile devices to show where we&#39;ve been without letting anyone track us?"/>
+        <meta property="article:published_time" content="2015-02-15" />
+            <meta property="article:section" content="research" />
+            <meta property="article:tag" content="crypto" />
+            <meta property="article:tag" content="privacy" />
+            <meta property="article:tag" content="mobile" />
+            <meta property="article:author" content="Ben Davis" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/bootstrap.flatly.min.css" type="text/css"/>
+    <link href="http://www.thebendavis.net/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://www.thebendavis.net/theme/css/pygments/monokai.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://www.thebendavis.net/theme/css/style.css" type="text/css"/>
+        <link href="http://www.thebendavis.net/media/css/custom.css" rel="stylesheet">
+
+        <link href="http://www.thebendavis.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="TheBenDavis.net ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://www.thebendavis.net/" class="navbar-brand">
+TheBenDavis.net            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/blog/">Blog</a></li>
+                         <li><a href="http://www.thebendavis.net/about/">
+                             About Me
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://www.thebendavis.net/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+
+    <section id="content">
+        <article >
+            <header class="page-header">
+                <h1><a href="http://www.thebendavis.net/blog/privacy-preserving-alibi-systems-overview/"
+   title="Permalink to 'Privacy-Preserving Alibis for Mobile Device Users'"
+   rel="bookmark"
+   class="permalink">&diam;</a>
+<a href="http://www.thebendavis.net/blog/privacy-preserving-alibi-systems-overview/">Privacy-Preserving Alibis for Mobile Device Users</a>
+</h1>
+            </header>
+            <div class="entry-content">
+                <h3>Can you prove what you did last summer?</h3>
+<p>A man faced the death penalty when he was charged with the murder of a government witness.
+Months after his arrest, the defense obtained the public transit records associated with the man's MetroCard and found that these records supported his claim that he was miles away at the time of the crime.
+After seeing this new evidence, the prosecution <a href="http://www.nytimes.com/2009/01/01/nyregion/01murder.html" title="Murder Case Dropped After MetroCard Verifies Alibi">dropped all charges</a>.</p>
+<p>Just imagine what might have happened if this man hadn't used his MetroCard that night.
+Cases like this show that while it doesn't happen often, it can be incredibly important to have an alibi.
+The tricky part is that you generally won't know when you'll need one before it's too late to get one - if you don't have one already, you're out of luck.
+What can we do to make sure we have an alibi whenever we need one?</p>
+<h3>Travel like no one is watching</h3>
+<p>Inspired by the <a href="https://en.wikipedia.org/wiki/Alibi">alibi defense</a> in criminal procedures, here I'll be using the word "alibi" refer to the general notion of providing evidence to support a claim of having been at a particular place at a particular time.</p>
+<p>We can't always count on having used our MetroCard at a critical time.
+We should proactively establish alibis whenever possible in order to maximize our chances of having an alibi when we need one - ideally without requiring too much thought or impact on our daily behavior.</p>
+<p>With the rise of modern smart phones, it is increasingly common to carry a mobile device with GPS and other location-based sensors wherever we go.
+It seems like we should be able to use our mobile phones to establish "alibi" evidence for ourselves in the same way a MetroCard can serve this purpose.</p>
+<p>Indeed, there are many apps and services that track the location of mobile devices by having the device periodically upload its location to a centralized server.
+The biggest problem with this approach is the lack of control the user has over their privacy - they must trust the third-party service completely with their personal location data.</p>
+<p>Furthermore, if users want to avoid revealing their location to the service when doing something they wish to keep private they must decide to turn off the service ahead of time.
+This requires making manual decisions with potentially serious privacy implications, and once these decisions are made there is no going back.
+Imagine an employee turning off their tracking service when taking a long lunch, later accused of robbing a bank at that time - they're out of luck!</p>
+<p>Is there a way to have the best of both worlds?
+We'd like to make sure we always have an alibi when we need it, without relying on a third-party to track us and hope they don't do anything creepy - or that nobody creepy gets access to the third-party service's data!</p>
+<h3>Privacy-Preserving Alibi Systems</h3>
+<p>At UC Davis, I led a project with the goal of developing a way for mobile device users to make sure they have alibis when they need one in a way that doesn't require them to give up their privacy.
+Our insight was that while you must reveal your identity when you <em>claim</em> an alibi, we can construct a scheme where <em>creating</em> the alibi does not reveal your identity.</p>
+<p>In our system, a user's mobile device runs an app that automatically participates in opportunistic exchanges with nearby devices, creating alibis for the <strong>alibi owner</strong> in a way that does not reveal the identity of the alibi owner.
+Essentially, this establishes a "testimony" that the other participant (the <strong>alibi corroborator</strong>) observed the alibi owner (really, their mobile device and a computation requiring the owner's private key) at their current, shared location and time.
+The alibi owner stores this testimony for later.</p>
+<p>If and only if the alibi owner wishes to claim that particular alibi, they can provide the testimony and some additional information to a <strong>judge</strong> who can verify that the identity associated with the testimony does indeed match the alibi owner (and a number of other properties needed to detect various types of fraud and perjury).
+This reveals no other information about any other alibis created by that user, so the user can disclose only what they want, and exactly what they want.
+We require no trusted third party to create alibis or provide the security guarantees, and there is no third party that can force a reveal of the identity of alibis without the owner's participation.</p>
+<p>Specifically, we created two cryptographic schemes that allow a user's mobile device to opportunistically and automatically establish evidence to support claims of past locations ("alibis") on the user's behalf without revealing the user's identity.
+These schemes bind the user's identity to an alibi when the alibi is created, but the identity is only revealed if and when the owner claims the alibi, leaving the user in complete control of the disclosure of their identity.
+Our constructions are based on a string commitment scheme that is secure in the unbound receiver model.
+These schemes are designed to work within the existing infrastructure available to mobile device users, and do not require additional or existing trusted third parties to fulfill the privacy guarantees of our schemes.</p>
+<h3>Design, implementation, and real-world feasibility</h3>
+<p>Please see the slides from my ASIACCS 2012 presentation for the general flow of the protocols, and the publications for details on the design and implementation of our cryptographic schemes.</p>
+<p>We have implemented the computational components of our schemes in an Android app that demonstrates that our approach is feasible for use on mobile devices, in terms of both computation and storage requirements.
+The computations required for creating and verifying alibis can be done on even older Android devices in fractions of a second, and only require a few hundred bytes of storage for each alibi created.</p>
+<h3>Comparison to traditional alibis</h3>
+<p>The alibis in our system have much in common with the types of "traditional alibis" normally found in criminal proceedings.
+The strength of a traditional alibi depends on the reliability of the evidence and trustworthiness of the corroborator, and the same applies to our alibis.
+Just as in the traditional setting, we cannot prevent alibi owners and corroborators from colluding to create a fake but valid alibi (perjury), so in both cases the evaluation of the strength of the alibi is up to the judge to consider the circumstances and context.</p>
+<p>However, the alibis in our systems have a number of advantages over traditional alibis.
+Primarily, the privacy guarantees discussed above allow participants to create alibis without revealing their identity.
+Their identity is only revealed to be associated with an alibi if they themselves decide to claim that alibi, which they can do without revealing anything else about other alibis they have created.
+Also, our alibis cannot be created without the consent and participation of the alibi owner.</p>
+<p>Furthermore, our alibis have non-forgeability properties beyond that of many traditional alibis, including the ability to reveal one-sided forgeries, where either the alibi owner or corroborator attempts to counterfeit or modify an existing alibi without the other party's explicit, intentional participation.</p>
+<p>The identities of the participants are directly and unambiguously embedded into the alibis, preventing the common problem in traditional alibis where imperfect human observation and faulty human memory can result in inaccurate alibi testimony.</p>
+<p>We have designed our schemes so the alibi owner stores all data necessary to corroborate and verify the alibi, as they have the greatest incentive to do so.
+Unlike many traditional alibis, our alibis do not rely on the memory of the corroborator after alibi creation.</p>
+<p>Our papers detail the precise threat model, assumptions, properties and guarantees of our systems, including the safeguards and checks that prevent various types of fraud and perjury.</p>
+<h3>Read more in these publications</h3>
+<p>Parts of this work have been published in the following peer-reviewed publication:</p>
+<p><span class="bib-entry">
+    <span class="papertitle">Privacy-Preserving Alibi Systems (<a href="/pubs/davis-asiaccs12-alibis.pdf">paper</a>, <a href="/pubs/davis-asiaccs12-alibis-slides.pdf">slides</a>)</span>
+    <span class="author">Benjamin Davis, Hao Chen, and Matthew Franklin.</span>
+    <span class="venue">7th ACM Symposium on Information, Computer and Communications Security (ASIACCS). Seoul, South Korea, May 1-3, 2012.</span>
+  </span></p>
+<p>For further elaboration, please see my Ph.D. dissertation:</p>
+<p><span class="bib-entry">
+    <span class="papertitle"><a href="/pubs/davis-dissertation.pdf">Protecting Systems from Within:<br />Application-Level Observation and Control Mechanisms</a></span>
+    <span class="author">Benjamin Davis, Department of Computer Science, University of California, Davis.</span>
+    <span class="venue">Dissertation Committee: Hao Chen, Matthew Bishop, Karl Levitt</span>
+  </span></p>
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+<a href="http://www.thebendavis.net/blog/privacy-preserving-alibi-systems-overview/"
+   title="Permalink to 'Privacy-Preserving Alibis for Mobile Device Users'"
+   rel="bookmark"
+   class="permalink">&diam;</a>
+    <!-- <span class="label label-default">Date</span> -->
+    <span class="published">
+        <!-- <i class="fa fa-calendar"></i> --><time datetime="2015-02-15T20:00:00-08:00"> Sun 15 February 2015</time>
+    </span>
+
+
+
+&Colon;
+<!-- <span class="label label-default">Tags</span> -->
+        <a href="http://www.thebendavis.net/tag/crypto.html">crypto</a>,         <a href="http://www.thebendavis.net/tag/privacy.html">privacy</a>,         <a href="http://www.thebendavis.net/tag/mobile.html">mobile</a>    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Ben Davis
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://www.thebendavis.net/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://www.thebendavis.net/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://www.thebendavis.net/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

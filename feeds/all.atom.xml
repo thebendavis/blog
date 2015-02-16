@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>TheBenDavis.net</title><link href="http://www.thebendavis.net/" rel="alternate"></link><link href="http://www.thebendavis.net/feeds/all.atom.xml" rel="self"></link><id>http://www.thebendavis.net/</id><updated>2015-02-06T20:00:00-08:00</updated><entry><title>DBTaint: Cross-Application Information Flow Tracking via Databases</title><link href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/" rel="alternate"></link><updated>2015-02-06T20:00:00-08:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-02-06:blog/dbtaint-database-information-flow-tracking-overview/</id><summary type="html">&lt;h3&gt;The dangers of user content&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>TheBenDavis.net</title><link href="http://www.thebendavis.net/" rel="alternate"></link><link href="http://www.thebendavis.net/feeds/all.atom.xml" rel="self"></link><id>http://www.thebendavis.net/</id><updated>2015-02-15T20:00:00-08:00</updated><entry><title>Privacy-Preserving Alibis for Mobile Device Users</title><link href="http://www.thebendavis.net/blog/privacy-preserving-alibi-systems-overview/" rel="alternate"></link><updated>2015-02-15T20:00:00-08:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-02-15:blog/privacy-preserving-alibi-systems-overview/</id><summary type="html">&lt;h3&gt;Can you prove what you did last summer?&lt;/h3&gt;
+&lt;p&gt;A man faced the death penalty when he was charged with the murder of a government witness.
+Months after his arrest, the defense obtained the public transit records associated with the man's MetroCard and found that these records supported his claim that he was miles away at the time of the crime.
+After seeing this new evidence, the prosecution &lt;a href="http://www.nytimes.com/2009/01/01/nyregion/01murder.html" title="Murder Case Dropped After MetroCard Verifies Alibi"&gt;dropped all charges&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Just imagine what might have happened if this man hadn't used his MetroCard that night.
+Cases like this show that while it doesn't happen often, it can be incredibly important to have an alibi.
+The tricky part is that you generally won't know when you'll need one before it's too late to get one - if you don't have one already, you're out of luck.
+What can we do to make sure we have an alibi whenever we need one?&lt;/p&gt;
+&lt;h3&gt;Travel like no one is watching&lt;/h3&gt;
+&lt;p&gt;Inspired by the &lt;a href="https://en.wikipedia.org/wiki/Alibi"&gt;alibi defense&lt;/a&gt; in criminal procedures, here I'll be using the word "alibi" refer to the general notion of providing evidence to support a claim of having been at a particular place at a particular time.&lt;/p&gt;
+&lt;p&gt;We can't always count on having used our MetroCard at a critical time.
+We should proactively establish alibis whenever possible in order to maximize our chances of having an alibi when we need one - ideally without requiring too much thought or impact on our daily behavior.&lt;/p&gt;
+&lt;p&gt;With the rise of modern smart phones, it is increasingly common to carry a mobile device with GPS and other location-based sensors wherever we go.
+It seems like we should be able to use our mobile phones to establish "alibi" evidence for ourselves in the same way a MetroCard can serve this purpose.&lt;/p&gt;
+&lt;p&gt;Indeed, there are many apps and services that track the location of mobile devices by having the device periodically upload its location to a centralized server.
+The biggest problem with this approach is the lack of control the user has over their privacy - they must trust the third-party service completely with their personal location data.&lt;/p&gt;
+&lt;p&gt;Furthermore, if users want to avoid revealing their location to the service when doing something they wish to keep private they must decide to turn off the service ahead of time.
+This requires making manual decisions with potentially serious privacy implications, and once these decisions are made there is no going back.
+Imagine an employee turning off their tracking service when taking a long lunch, later accused of robbing a bank at that time - they're out of luck!&lt;/p&gt;
+&lt;p&gt;Is there a way to have the best of both worlds?
+We'd like to make sure we always have an alibi when we need it, without relying on a third-party to track us and hope they don't do anything creepy - or that nobody creepy gets access to the third-party service's data!&lt;/p&gt;
+&lt;h3&gt;Privacy-Preserving Alibi Systems&lt;/h3&gt;
+&lt;p&gt;At UC Davis, I led a project with the goal of developing a way for mobile device users to make sure they have alibis when they need one in a way that doesn't require them to give up their privacy.
+Our insight was that while you must reveal your identity when you &lt;em&gt;claim&lt;/em&gt; an alibi, we can construct a scheme where &lt;em&gt;creating&lt;/em&gt; the alibi does not reveal your identity.&lt;/p&gt;
+&lt;p&gt;In our system, a user's mobile device runs an app that automatically participates in opportunistic exchanges with nearby devices, creating alibis for the &lt;strong&gt;alibi owner&lt;/strong&gt; in a way that does not reveal the identity of the alibi owner.
+Essentially, this establishes a "testimony" that the other participant (the &lt;strong&gt;alibi corroborator&lt;/strong&gt;) observed the alibi owner (really, their mobile device and a computation requiring the owner's private key) at their current, shared location and time.
+The alibi owner stores this testimony for later.&lt;/p&gt;
+&lt;p&gt;If and only if the alibi owner wishes to claim that particular alibi, they can provide the testimony and some additional information to a &lt;strong&gt;judge&lt;/strong&gt; who can verify that the identity associated with the testimony does indeed match the alibi owner (and a number of other properties needed to detect various types of fraud and perjury).
+This reveals no other information about any other alibis created by that user, so the user can disclose only what they want, and exactly what they want.
+We require no trusted third party to create alibis or provide the security guarantees, and there is no third party that can force a reveal of the identity of alibis without the owner's participation.&lt;/p&gt;
+&lt;p&gt;Specifically, we created two cryptographic schemes that allow a user's mobile device to opportunistically and automatically establish evidence to support claims of past locations ("alibis") on the user's behalf without revealing the user's identity.
+These schemes bind the user's identity to an alibi when the alibi is created, but the identity is only revealed if and when the owner claims the alibi, leaving the user in complete control of the disclosure of their identity.
+Our constructions are based on a string commitment scheme that is secure in the unbound receiver model.
+These schemes are designed to work within the existing infrastructure available to mobile device users, and do not require additional or existing trusted third parties to fulfill the privacy guarantees of our schemes.&lt;/p&gt;
+&lt;h3&gt;Design, implementation, and real-world feasibility&lt;/h3&gt;
+&lt;p&gt;Please see the slides from my ASIACCS 2012 presentation for the general flow of the protocols, and the publications for details on the design and implementation of our cryptographic schemes.&lt;/p&gt;
+&lt;p&gt;We have implemented the computational components of our schemes in an Android app that demonstrates that our approach is feasible for use on mobile devices, in terms of both computation and storage requirements.
+The computations required for creating and verifying alibis can be done on even older Android devices in fractions of a second, and only require a few hundred bytes of storage for each alibi created.&lt;/p&gt;
+&lt;h3&gt;Comparison to traditional alibis&lt;/h3&gt;
+&lt;p&gt;The alibis in our system have much in common with the types of "traditional alibis" normally found in criminal proceedings.
+The strength of a traditional alibi depends on the reliability of the evidence and trustworthiness of the corroborator, and the same applies to our alibis.
+Just as in the traditional setting, we cannot prevent alibi owners and corroborators from colluding to create a fake but valid alibi (perjury), so in both cases the evaluation of the strength of the alibi is up to the judge to consider the circumstances and context.&lt;/p&gt;
+&lt;p&gt;However, the alibis in our systems have a number of advantages over traditional alibis.
+Primarily, the privacy guarantees discussed above allow participants to create alibis without revealing their identity.
+Their identity is only revealed to be associated with an alibi if they themselves decide to claim that alibi, which they can do without revealing anything else about other alibis they have created.
+Also, our alibis cannot be created without the consent and participation of the alibi owner.&lt;/p&gt;
+&lt;p&gt;Furthermore, our alibis have non-forgeability properties beyond that of many traditional alibis, including the ability to reveal one-sided forgeries, where either the alibi owner or corroborator attempts to counterfeit or modify an existing alibi without the other party's explicit, intentional participation.&lt;/p&gt;
+&lt;p&gt;The identities of the participants are directly and unambiguously embedded into the alibis, preventing the common problem in traditional alibis where imperfect human observation and faulty human memory can result in inaccurate alibi testimony.&lt;/p&gt;
+&lt;p&gt;We have designed our schemes so the alibi owner stores all data necessary to corroborate and verify the alibi, as they have the greatest incentive to do so.
+Unlike many traditional alibis, our alibis do not rely on the memory of the corroborator after alibi creation.&lt;/p&gt;
+&lt;p&gt;Our papers detail the precise threat model, assumptions, properties and guarantees of our systems, including the safeguards and checks that prevent various types of fraud and perjury.&lt;/p&gt;
+&lt;h3&gt;Read more in these publications&lt;/h3&gt;
+&lt;p&gt;Parts of this work have been published in the following peer-reviewed publication:&lt;/p&gt;
+&lt;p&gt;&lt;span class="bib-entry"&gt;
+    &lt;span class="papertitle"&gt;Privacy-Preserving Alibi Systems (&lt;a href="/pubs/davis-asiaccs12-alibis.pdf"&gt;paper&lt;/a&gt;, &lt;a href="/pubs/davis-asiaccs12-alibis-slides.pdf"&gt;slides&lt;/a&gt;)&lt;/span&gt;
+    &lt;span class="author"&gt;Benjamin Davis, Hao Chen, and Matthew Franklin.&lt;/span&gt;
+    &lt;span class="venue"&gt;7th ACM Symposium on Information, Computer and Communications Security (ASIACCS). Seoul, South Korea, May 1-3, 2012.&lt;/span&gt;
+  &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;For further elaboration, please see my Ph.D. dissertation:&lt;/p&gt;
+&lt;p&gt;&lt;span class="bib-entry"&gt;
+    &lt;span class="papertitle"&gt;&lt;a href="/pubs/davis-dissertation.pdf"&gt;Protecting Systems from Within:&lt;br /&gt;Application-Level Observation and Control Mechanisms&lt;/a&gt;&lt;/span&gt;
+    &lt;span class="author"&gt;Benjamin Davis, Department of Computer Science, University of California, Davis.&lt;/span&gt;
+    &lt;span class="venue"&gt;Dissertation Committee: Hao Chen, Matthew Bishop, Karl Levitt&lt;/span&gt;
+  &lt;/span&gt;&lt;/p&gt;</summary><category term="crypto"></category><category term="privacy"></category><category term="mobile"></category></entry><entry><title>DBTaint: Cross-Application Information Flow Tracking via Databases</title><link href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/" rel="alternate"></link><updated>2015-02-06T20:00:00-08:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-02-06:blog/dbtaint-database-information-flow-tracking-overview/</id><summary type="html">&lt;h3&gt;The dangers of user content&lt;/h3&gt;
 &lt;p&gt;One major challenge modern web services face is how to safely incorporate user content.
 Naive use of potentially malicious content can leave the service and its visitors vulnerable to attack.
 Many of these attacks work by &lt;a href="https://en.wikipedia.org/wiki/Code_injection"&gt;code injection&lt;/a&gt;, in which improperly handled content is used in an unsafe way.
@@ -81,7 +144,7 @@ We use Perl's &lt;a href="http://perldoc.perl.org/perlsec.html#Taint-mode" title
 &lt;p&gt;The performance impact of DBTaint on these systems was relatively low (less than 10-15% overhead) in our evaluation.
 In additional experiments, we show that we can trade portability for performance by implementing the composite-type metadata propagation database functionality in C rather than in SQL to further reduce the overhead of our approach.
 Please see our publications for a more detailed discussion of these topics.&lt;/p&gt;
-&lt;h3&gt;Read more in our published work&lt;/h3&gt;
+&lt;h3&gt;Read more in these publications&lt;/h3&gt;
 &lt;p&gt;Parts of this work have been published in the following peer-reviewed publication:&lt;/p&gt;
 &lt;p&gt;&lt;span class="bib-entry"&gt;
     &lt;span class="papertitle"&gt;DBTaint: Cross-Application Information Flow Tracking via Databases (&lt;a href="/pubs/davis-webapps10-dbtaint.pdf"&gt;paper&lt;/a&gt;, &lt;a href="/pubs/davis-webapps10-dbtaint-slides.pdf"&gt;slides&lt;/a&gt;, &lt;a href="/pubs/davis-webapps10-dbtaint-poster.pdf"&gt;poster&lt;/a&gt;)&lt;/span&gt;
@@ -151,8 +214,8 @@ On average, rewritten apps increased in size by only a few KiB, which was a less
 The specific run-time performance impact depends on the new behavior added, but the inherent overhead of our approach is low, adding only fractions of a microsecond when interposing on method calls of interest (even on aging hardware).
 Because much of the work is done statically, generally the impact is not much more than if the developer had originally written the app with the additional behavior.
 The static analysis and app rewriting process itself is efficient in terms of time and computation required, averaging about 5 seconds to rewrite an app using normal desktop PC hardware.&lt;/p&gt;
-&lt;h3&gt;Read more in our publications&lt;/h3&gt;
-&lt;p&gt;Parts of this work have been published in the following peer-reviewed publications with the coauthors named below:&lt;/p&gt;
+&lt;h3&gt;Read more in these publications&lt;/h3&gt;
+&lt;p&gt;Parts of this work have been published in the following peer-reviewed publications:&lt;/p&gt;
 &lt;p&gt;&lt;span class="bib-entry"&gt;
     &lt;span class="papertitle"&gt;RetroSkeleton: Retrofitting Android Apps (&lt;a href="/pubs/davis-mobisys13-retroskeleton.pdf"&gt;paper&lt;/a&gt;, &lt;a href="/pubs/davis-mobisys13-retroskeleton-slides.pdf"&gt;slides&lt;/a&gt;)&lt;/span&gt;
     &lt;span class="author"&gt;Benjamin Davis and Hao Chen.&lt;/span&gt;
