@@ -12,8 +12,8 @@ Email me at: hello<span class="hideme">REMOVETHESECAPITALLETTERS</span>@thebenda
 I have led the following research projects:
 
 * [**RetroSkeleton**]({filename}/retroskeleton-android-app-rewriting-overview.md): an Android app rewriting system that automatically enforces security policies, patches vulnerabilities, and augments functionality in real-world Android apps. This project included the development of a static analysis and sophisticated bytecode transformation framework for Android apps, exploring dynamic behavior of apps via automated emulator-based testing, and detection and thwarting of malware.
-* [**Privacy-Preserving Alibi Systems**]({filename}/privacy-preserving-alibi-systems-overview.md): design and implementation of cryptographic schemes that enable users to use their mobile devices to provide evidence of their past locations while retaining control of their privacy
-* [**DBTaint**]({filename}/dbtaint-database-information-flow-tracking-overview.md): a cross-application end-to-end [information flow](https://en.wikipedia.org/wiki/Information_flow_%28information_theory%29) tracking system for modern web services and databases
+* [**Privacy-Preserving Alibi Systems**]({filename}/privacy-preserving-alibi-systems-overview.md): design and implementation of cryptographic schemes that enable mobile device users to provide evidence of their past locations while retaining control of their privacy
+* [**DBTaint**]({filename}/dbtaint-database-information-flow-tracking-overview.md): a cross-application end-to-end [information flow](https://en.wikipedia.org/wiki/Information_flow_%28information_theory%29) tracking system for modern web services and databases, protecting real-world web apps from cross-site scripting and other code-injection attacks
 
 See the linked project pages for more detail and slides for conference presentations I've given.
 
