@@ -1,5 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TheBenDavis.net</title><link>http://www.thebendavis.net/</link><description></description><atom:link href="http://www.thebendavis.net/feeds/ben-davis.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 15 Feb 2015 20:00:00 -0800</lastBuildDate><item><title>Privacy-Preserving Alibis for Mobile Device Users</title><link>http://www.thebendavis.net/blog/privacy-preserving-alibi-systems-overview/</link><description>&lt;h3&gt;Can you prove what you did last summer?&lt;/h3&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TheBenDavis.net</title><link>http://www.thebendavis.net/</link><description></description><atom:link href="http://www.thebendavis.net/feeds/ben-davis.rss.xml" rel="self"></atom:link><lastBuildDate>Fri, 27 Feb 2015 20:00:00 -0800</lastBuildDate><item><title>Deft note-taking: the power of plain text</title><link>http://www.thebendavis.net/blog/plain-text-note-taking-with-deft/</link><description>&lt;h3&gt;A filing cabinet of post-it notes&lt;/h3&gt;
+&lt;p&gt;I keep tons of little notes - information that I may not use frequently, isn't part of a bigger project, but might be useful later.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;"cheat sheets" for infrequently-used software and tools&lt;/li&gt;
+&lt;li&gt;the steps I took to perform a complex configuration/setup task, and resolutions to cryptic errors that were difficult to diagnose&lt;/li&gt;
+&lt;li&gt;notes from books I've read&lt;/li&gt;
+&lt;li&gt;notes from workshops, presentations, and meetings not associated with a bigger project&lt;/li&gt;
+&lt;li&gt;lots of lists: gift ideas for friends and family, my travel/packing list, organizations I need to contact with my updated address when I move, and many more&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When in doubt, I'll save it in a note.
+This has saved me dozens of times:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Weird workaround when setting up the server? Guess who saves the day (hours, at least) 18 months later when we get a new server and need to set it up the same way.&lt;/li&gt;
+&lt;li&gt;"Wasn't there a guest speaker last year who talked about something like this?" Indeed there was - here are my notes about her presentation.&lt;/li&gt;
+&lt;li&gt;"I think we looked into this but decided it was a dead end. Do you remember why?" Here are the technical limitations we hit.&lt;/li&gt;
+&lt;li&gt;"Wait, what did we get him for last Christmas?" I have the list right here.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I use a system based on &lt;a href="http://daringfireball.net/projects/markdown/"&gt;markdown&lt;/a&gt;-formatted plain text files, accessed using &lt;a href="http://jblevins.org/projects/deft/"&gt;Deft&lt;/a&gt; for Emacs, and synced via Dropbox.
+It's served me well for years, particularly in grad school when I was constantly exploring new ideas and performing experiments.
+Here's a little about the why and how.&lt;/p&gt;
+&lt;h3&gt;Sustainable note-taking&lt;/h3&gt;
+&lt;p&gt;Ever spend an afternoon trying out some new software with a bunch of fancy knobs to turn, only to find it's not worth the hassle?
+I wanted a note-taking system that is not only useful, but one I actually use enough to be worth the effort of maintaining.
+If I have something to save, I want one trusted place to put it - and if I want to find something, I want one trusted place to look.&lt;/p&gt;
+&lt;p&gt;Here are my requirements for a note-taking system:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Notes should be &lt;strong&gt;easy to write&lt;/strong&gt;. If adding or editing a note is slow, cumbersome, or requires many decisions, I'm less likely to do it.&lt;/li&gt;
+&lt;li&gt;Notes should be &lt;strong&gt;easy to read&lt;/strong&gt;. Notes should be fast and simple to access, ideally across platforms. Furthermore, my data should be easy to export and migrate. Services will close and software will rot, and I don't want to lose my notes when this happens.&lt;/li&gt;
+&lt;li&gt;Notes should be &lt;strong&gt;easy to find&lt;/strong&gt;. I need a good search system - fast and complete.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I explored a number of options: proprietary and open-source applications, online services, personal wikis...
+During these experiments, I came up with a few additional requirements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Easy to back up and restore individual notes&lt;/li&gt;
+&lt;li&gt;Resilient to changes in note-taking software and variances in implementations (especially across platforms)&lt;/li&gt;
+&lt;li&gt;Ability to access and edit notes while offline&lt;/li&gt;
+&lt;li&gt;Easy to keep in sync across devices - the less I have to think about this, the better. Merge conflicts are a bummer, but out-of-sync binary blobs are worse.&lt;/li&gt;
+&lt;li&gt;Not too "fiddly" - I found tagging/categorizing/cross-referencing notes was a time-sponge and rarely worth the effort. I'd just end up searching anyway.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;The power of plain text&lt;/h3&gt;
+&lt;p&gt;Ultimately I settled on plain text files, one file per note, all in a single directory, with the title of the note as the file name.
+This meets my requirements pretty well:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Text files are fast and easy to create and edit in just about any editor.&lt;/li&gt;
+&lt;li&gt;Search is DIY but straightforward. Even &lt;code&gt;grep&lt;/code&gt; can be used in a pinch, and at least &lt;code&gt;grep&lt;/code&gt; is fast, reliable, and complete.&lt;/li&gt;
+&lt;li&gt;Backups are straightforward, and it'd be hard to be more resilient to software changes.&lt;/li&gt;
+&lt;li&gt;I keep my notes folder in Dropbox (I keep sensitive data elsewhere), and sync has worked well for me.&lt;/li&gt;
+&lt;li&gt;Dropbox leaves files on the hard drive, so notes are available offline and are included in my system backups.&lt;/li&gt;
+&lt;li&gt;Since I'm not dependent on Dropbox for anything other than pushing my data around, the day it stops working I can replace it with something else. I used &lt;a href="http://www.cis.upenn.edu/~bcpierce/unison/"&gt;Unison&lt;/a&gt; before Dropbox.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In the content of the note files, I write in &lt;a href="http://daringfireball.net/projects/markdown/"&gt;markdown&lt;/a&gt;, which is a lightweight plain text format that is designed to be easy to read and write.
+Markdown files are plain text and look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# Simple syntax
+
+Headings start with the # character.
+Unordered lists look like this:
+
+* alpha
+* bravo
+* charlie
+
+# Links
+
+Links can use [inline](http://example.com)
+or [reference style][xyz] syntax.
+
+[xyz]: http://example.net
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Markdown was originally designed for writing content that gets exported to HTML, but I rarely export my notes.
+For me, following the markdown syntax just gives me a uniform format that is simple to write and easy to skim.
+I also use markdown in other settings (like writing these blog posts), so it's familiar.
+I keep &lt;a href="http://fletcherpenney.net/multimarkdown/"&gt;multimarkdown&lt;/a&gt; installed on my workstations for other purposes, so it is available on the occasion that I want to export a note to HTML, PDF, or RTF.&lt;/p&gt;
+&lt;p&gt;There are a few downsides with plain text notes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;No attachments or fancy metadata. In practice, this hasn't been a big problem for me. By the time I'm creating substantial artifacts for a project, I've probably already set up a git repo or &lt;a href="https://trello.com/"&gt;Trello&lt;/a&gt; board or something for the project.&lt;/li&gt;
+&lt;li&gt;Typesetting math isn't very elegant. You can write equations as LaTeX or something, but it's not ideal.&lt;/li&gt;
+&lt;li&gt;No built-in sharing. You can mix-and-match whatever works for you (git repo, shared directory/drive, etc.) but you have to do it yourself.&lt;/li&gt;
+&lt;li&gt;No built-in security mechanisms (e.g., encryption). If you don't trust Dropbox with your notes, you'll have to do something else to sync, like keeping files in an encrypted volume or on a USB stick you can keep with you.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Wrangling plain text files...&lt;/h3&gt;
+&lt;p&gt;The great thing about plain text is you don't need anything special to read or write.
+However, you can make it easier to do common things.&lt;/p&gt;
+&lt;p&gt;I'm a big fan of the search-first design I first saw in a Mac app called &lt;a href="http://notational.net/"&gt;Notational Velocity&lt;/a&gt;.
+The top two bullet points on the app description page are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;"&lt;strong&gt;Modeless Operation&lt;/strong&gt;: Searching for notes is not a separate action; rather, it is the primary interface."&lt;/li&gt;
+&lt;li&gt;"&lt;strong&gt;Incremental Search&lt;/strong&gt;: Searching encompasses all notes' content and occurs instantly with each key pressed."&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I'm a big fan of this approach - just open and the app searches your notes incrementally as you type.
+Sorting notes by most-recently-edited makes frequently-used notes even easier to find.&lt;/p&gt;
+&lt;h4&gt;... on a workstation&lt;/h4&gt;
+&lt;p&gt;I like Notational Velocity (and &lt;a href="http://brettterpstra.com/projects/nvalt/"&gt;nvALT&lt;/a&gt;, a popular fork), but I'm not always on a Mac so I need something I can use across all of my machines (Linux/Mac/Windows).&lt;/p&gt;
+&lt;p&gt;Vim is great and use it regularly, but Emacs has become my go-to editor for most things (mostly because I'd rather write elisp than vimscript).
+Since I use Emacs everywhere (including the terminal and over SSH), I looked at a number of Emacs-based options.
+My favorite is &lt;a href="http://jblevins.org/projects/deft/"&gt;Deft&lt;/a&gt;: a brilliant Emacs mode inspired by Notational Velocity, featuring the same search-first design.
+I use the &lt;a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Emacs-Server.html"&gt;Emacs Server&lt;/a&gt; to keep Emacs running, so launching a new &lt;code&gt;emacsclient&lt;/code&gt; is very fast, and my notes are just a single keystroke away.
+I enable &lt;code&gt;markdown-mode&lt;/code&gt; for my deft notes, and a few other settings, in &lt;a href="https://github.com/thebendavis/.emacs.d"&gt;my .emacs.d config on github&lt;/a&gt;.&lt;/p&gt;
+&lt;h5&gt;A side note:&lt;/h5&gt;
+&lt;p&gt;If you've already invested in Emacs, definitely check out &lt;a href="http://orgmode.org/"&gt;org mode&lt;/a&gt;, which has many more powerful features built on a plain-text system.
+It goes way beyond markdown's features, including support for time tracking, task and project planning, scheduling, text-based spreadsheets (?!) and more.
+Org mode works best when you can put everything into that system, which wasn't a good fit for my setting, but it's worth checking out to see if it works for you.&lt;/p&gt;
+&lt;h4&gt;... on iOS&lt;/h4&gt;
+&lt;p&gt;While I do most of my work on a desktop/laptop, it is useful to be able to quickly search and edit notes on a mobile device.
+There are many mobile note-taking apps that sync with markdown files in a Dropbox folder.
+On iOS, I've been using &lt;a href="http://bywordapp.com/ios"&gt;Byword&lt;/a&gt;, which has markdown support and the same incremental search features.&lt;/p&gt;
+&lt;h3&gt;Keep it simple&lt;/h3&gt;
+&lt;p&gt;I can't tell you how many times I've saved hours of work and frustration by finding a note I wrote years earlier.
+But it would have never been there if I didn't have a near-frictionless way to add, search, and maintain my notes.
+Simplicity is a feature that led me to an approach that's a bit DIY, but flexible and within my own control.
+Out of all of the note-taking apps and services available five years ago, not every option would have left me with an upgrade path of "continue to use whatever text editor you like" to get me to today.
+Find a system that works for you, but if you're trying to decide, it's worth thinking five years ahead before signing up for the latest (ad-supported?) note-taking-in-the-cloud service...&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Ben Davis</dc:creator><pubDate>Fri, 27 Feb 2015 20:00:00 -0800</pubDate><guid>tag:www.thebendavis.net,2015-02-27:blog/plain-text-note-taking-with-deft/</guid><category>emacs</category><category>markdown</category><category>dropbox</category><category>ios</category></item><item><title>Privacy-Preserving Alibis for Mobile Device Users</title><link>http://www.thebendavis.net/blog/privacy-preserving-alibi-systems-overview/</link><description>&lt;h3&gt;Can you prove what you did last summer?&lt;/h3&gt;
 &lt;p&gt;A man faced the death penalty when he was charged with the murder of a government witness.
 Months after his arrest, the defense obtained the public transit records associated with the man's MetroCard and found that these records supported his claim that he was miles away at the time of the crime.
 After seeing this new evidence, the prosecution &lt;a href="http://www.nytimes.com/2009/01/01/nyregion/01murder.html" title="Murder Case Dropped After MetroCard Verifies Alibi"&gt;dropped all charges&lt;/a&gt;.&lt;/p&gt;
