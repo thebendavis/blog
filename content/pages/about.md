@@ -24,7 +24,7 @@ My work in industry includes:
 
 * Development of protocol-level security mechanisms for critical infrastructure systems and microcontroller-based implementations of these mechanisms
 * Building frameworks that combine formal methods and fuzzing analysis techniques to prove properties and identify vulnerabilities in digital systems
-* Vulnerability assessments of critical infrastructure networks and hardware, cloud computing environments, and various other networks and systems for clients
+* Vulnerability assessments of critical infrastructure networks and hardware, cloud computing environments, and various other networks and systems
 * Turning ad hoc exploits into generalized scanning tools that detect and mitigate classes of vulnerabilities
 * Creating and presenting curriculum and training exercises covering computer security topics and techniques
 
