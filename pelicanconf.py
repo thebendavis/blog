@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 AUTHOR = u'Ben Davis'
 SITENAME = u'TheBenDavis.net'
 
-TIMEZONE = 'America/Los_Angeles'
+TIMEZONE = 'America/New_York'
 DEFAULT_LANG = u'en'
 
 
@@ -116,6 +116,8 @@ SOCIAL = (
     #('Twitter', 'https://twitter.com/<username>'),
     #('Another social link', '#'),
 )
+
+USE_OPEN_GRAPH = False
 
 WELCOME_BLURB = """
 <p>
