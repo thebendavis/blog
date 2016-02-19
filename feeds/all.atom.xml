@@ -175,7 +175,7 @@ Unlike many traditional alibis, our alibis do not rely on the memory of the corr
     &lt;span class="papertitle"&gt;&lt;a href="/pubs/davis-dissertation.pdf"&gt;Protecting Systems from Within:&lt;br /&gt;Application-Level Observation and Control Mechanisms&lt;/a&gt;&lt;/span&gt;
     &lt;span class="author"&gt;Benjamin Davis, Department of Computer Science, University of California, Davis.&lt;/span&gt;
     &lt;span class="venue"&gt;Dissertation Committee: Hao Chen, Matthew Bishop, Karl Levitt&lt;/span&gt;
-  &lt;/span&gt;&lt;/p&gt;</summary><category term="crypto"></category><category term="privacy"></category><category term="mobile"></category></entry><entry><title>DBTaint: Cross-Application Information Flow Tracking via Databases</title><link href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/" rel="alternate"></link><updated>2015-02-06T20:00:00-05:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-02-06:blog/dbtaint-database-information-flow-tracking-overview/</id><summary type="html">&lt;h3&gt;The dangers of user content&lt;/h3&gt;
+  &lt;/span&gt;&lt;/p&gt;</summary><category term="crypto"></category><category term="privacy"></category><category term="mobile"></category></entry><entry><title>DBT: Cross-Application Information Flow Tracking via Databases</title><link href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/" rel="alternate"></link><updated>2015-02-06T20:00:00-05:00</updated><author><name>Ben Davis</name></author><id>tag:www.thebendavis.net,2015-02-06:blog/dbtaint-database-information-flow-tracking-overview/</id><summary type="html">&lt;h3&gt;The dangers of user content&lt;/h3&gt;
 &lt;p&gt;One major challenge modern web services face is how to safely incorporate user content.
 Naive use of potentially malicious content can leave the service and its visitors vulnerable to attack.
 Many of these attacks work by &lt;a href="https://en.wikipedia.org/wiki/Code_injection"&gt;code injection&lt;/a&gt;, in which improperly handled content is used in an unsafe way.
@@ -191,8 +191,8 @@ But there is another way to make sure only safe data is used in dangerous operat
 &lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Information_flow_%28information_theory%29" title="Information flow (information theory)"&gt;Information flow&lt;/a&gt; is a way to reason about how data flows through a system.
 &lt;a href="http://en.wikipedia.org/wiki/Taint_checking"&gt;Taint checking&lt;/a&gt; can provide a dynamic system that approximates the verification from full information flow analysis.
 In systems that provide taint checking, data from an untrusted source is marked as "tainted" in metadata associated with the data.
-While more sophisticated schemes exist (and are supported by DBTaint), to simplify the discussion we will assume there is a single bit of metadata for each data value, indicating either "tainted" or "untainted."
-Tainted data can only become untainted by passing through the appropriate sanitization routine.&lt;/p&gt;
+While we support more sophisticated schemes, let's simplify the discussion by assuming there is only a single bit of metadata for each data value, indicating either "tainted" or "untainted."
+Tainted data can only become untainted by passing through the appropriate sanitization routine, ensuring it is safe for use.&lt;/p&gt;
 &lt;p&gt;This metadata accompanies the data itself as it passes through the system, such as from one variable to another.
 When data is passed to a potentially dangerous operation (e.g., &lt;code&gt;eval&lt;/code&gt;), this tracking system can inspect the metadata on the data to determine if the value is "tainted."
 If so, then the system knows that this is (or at least could be) unsanitized data from an untrusted source and should not be allowed to be used in this dangerous operation.&lt;/p&gt;

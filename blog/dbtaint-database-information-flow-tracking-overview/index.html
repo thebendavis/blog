@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>DBTaint: Cross-Application Information Flow Tracking via Databases - TheBenDavis.net</title>
+    <title>DBT: Cross-Application Information Flow Tracking via Databases - TheBenDavis.net</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -14,7 +14,7 @@
 
         <meta name="author" content="Ben Davis" />
         <meta name="keywords" content="java,perl,sql,postgresql,web" />
-        <meta name="description" content="How can we prevent web services from using untrusted content in unsafe ways? DBTaint provides dynamic, end-to-end information flow tracking through entire web services and databases to prevent code injection and related attacks." />
+        <meta name="description" content="How can we prevent web services from using untrusted content in unsafe ways? DBTaint (DBT) provides dynamic, end-to-end information flow tracking through entire web services and databases to prevent code injection and related attacks." />
 
 
 
@@ -70,10 +70,10 @@ TheBenDavis.net            </a>
         <article >
             <header class="page-header">
                 <h1><a href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/"
-   title="Permalink to 'DBTaint: Cross-Application Information Flow Tracking via Databases'"
+   title="Permalink to 'DBT: Cross-Application Information Flow Tracking via Databases'"
    rel="bookmark"
    class="permalink">&diam;</a>
-<a href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/">DBTaint: Cross-Application Information Flow Tracking via Databases</a>
+<a href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/">DBT: Cross-Application Information Flow Tracking via Databases</a>
 </h1>
             </header>
             <div class="entry-content">
@@ -93,8 +93,8 @@ But there is another way to make sure only safe data is used in dangerous operat
 <p><a href="https://en.wikipedia.org/wiki/Information_flow_%28information_theory%29" title="Information flow (information theory)">Information flow</a> is a way to reason about how data flows through a system.
 <a href="http://en.wikipedia.org/wiki/Taint_checking">Taint checking</a> can provide a dynamic system that approximates the verification from full information flow analysis.
 In systems that provide taint checking, data from an untrusted source is marked as "tainted" in metadata associated with the data.
-While more sophisticated schemes exist (and are supported by DBTaint), to simplify the discussion we will assume there is a single bit of metadata for each data value, indicating either "tainted" or "untainted."
-Tainted data can only become untainted by passing through the appropriate sanitization routine.</p>
+While we support more sophisticated schemes, let's simplify the discussion by assuming there is only a single bit of metadata for each data value, indicating either "tainted" or "untainted."
+Tainted data can only become untainted by passing through the appropriate sanitization routine, ensuring it is safe for use.</p>
 <p>This metadata accompanies the data itself as it passes through the system, such as from one variable to another.
 When data is passed to a potentially dangerous operation (e.g., <code>eval</code>), this tracking system can inspect the metadata on the data to determine if the value is "tainted."
 If so, then the system knows that this is (or at least could be) unsanitized data from an untrusted source and should not be allowed to be used in this dangerous operation.</p>
@@ -176,7 +176,7 @@ Please see our publications for a more detailed discussion of these topics.</p>
                     <div class="panel-body">
 <footer class="post-info">
 <a href="http://www.thebendavis.net/blog/dbtaint-database-information-flow-tracking-overview/"
-   title="Permalink to 'DBTaint: Cross-Application Information Flow Tracking via Databases'"
+   title="Permalink to 'DBT: Cross-Application Information Flow Tracking via Databases'"
    rel="bookmark"
    class="permalink">&diam;</a>
     <!-- <span class="label label-default">Date</span> -->
