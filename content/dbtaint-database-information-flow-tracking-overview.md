@@ -1,8 +1,8 @@
-title: DBTaint: Cross-Application Information Flow Tracking via Databases
+title: DBT: Cross-Application Information Flow Tracking via Databases
 date: 2015-02-06 20:00
 category: research
 tags: java, perl, sql, postgresql, web
-summary: How can we prevent web services from using untrusted content in unsafe ways? DBTaint provides dynamic, end-to-end information flow tracking through entire web services and databases to prevent code injection and related attacks.
+summary: How can we prevent web services from using untrusted content in unsafe ways? DBTaint (DBT) provides dynamic, end-to-end information flow tracking through entire web services and databases to prevent code injection and related attacks.
 
 
 ### The dangers of user content
@@ -28,8 +28,8 @@ But there is another way to make sure only safe data is used in dangerous operat
 [Information flow](https://en.wikipedia.org/wiki/Information_flow_%28information_theory%29 "Information flow (information theory)") is a way to reason about how data flows through a system.
 [Taint checking](http://en.wikipedia.org/wiki/Taint_checking) can provide a dynamic system that approximates the verification from full information flow analysis.
 In systems that provide taint checking, data from an untrusted source is marked as "tainted" in metadata associated with the data.
-While more sophisticated schemes exist (and are supported by DBTaint), to simplify the discussion we will assume there is a single bit of metadata for each data value, indicating either "tainted" or "untainted."
-Tainted data can only become untainted by passing through the appropriate sanitization routine.
+While we support more sophisticated schemes, let's simplify the discussion by assuming there is only a single bit of metadata for each data value, indicating either "tainted" or "untainted."
+Tainted data can only become untainted by passing through the appropriate sanitization routine, ensuring it is safe for use.
 
 This metadata accompanies the data itself as it passes through the system, such as from one variable to another.
 When data is passed to a potentially dangerous operation (e.g., `eval`), this tracking system can inspect the metadata on the data to determine if the value is "tainted."
