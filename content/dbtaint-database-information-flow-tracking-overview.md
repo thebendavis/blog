@@ -19,7 +19,7 @@ Trying to find and close all of these gaps, while avoiding the introduction of n
 
 
 
-### Tell me before I do something stupid!
+### Tell me before I make a mistake!
 
 Taking a step back, we see that the general problem is that when data is used in a dangerous operation the system has no way to know whether this data is safe to use or not.
 It's up to the developers to make sure only safe (sanitized) data makes it this far - and to never make a mistake!
@@ -86,7 +86,7 @@ Please see the publications listed below for details on the semantics of the dat
 
 This is a diagram showing a web service running in DBTaint.
 
-![DBTaint System Diagram]({filename}/blog_media/2015/dbtaint/dbtaint-system-diagram.png "DBTaint System Diagram" =200x)
+![DBTaint System Diagram]({filename}/blog_media/2015/dbtaint/dbtaint-system-diagram.png "DBTaint System Diagram")
 
 In the diagram above, the red rounded rectangle around the Web App indicates the single-application information flow tracking system (e.g., Perl's taint mode).
 Observe that when a web app communicates with the database via a standard database interface module, this database interface is still running within the same single-application information flow tracking system.
