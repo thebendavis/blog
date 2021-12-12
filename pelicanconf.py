@@ -71,7 +71,7 @@ MENUITEMS = [
 ############################################################
 # Configuration
 
-THEME = '/alpha/x/thebendavis.net/pelican-themes/pelican-bootstrap3'
+THEME = '../pelican-themes/pelican-bootstrap3'
 BOOTSTRAP_THEME = 'flatly'
 PYGMENTS_STYLE = 'monokai'
 
